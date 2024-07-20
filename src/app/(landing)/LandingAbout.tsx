@@ -23,7 +23,7 @@ export function LandingAbout() {
 						</p>
 					</div>
 
-					<div className="flex-shrink-0 flex flex-col h-min m-auto w-60 lg:w-72 bg-white rounded border p-4 pt-1">
+					<div className="flex-shrink-0 flex flex-col h-min m-auto w-60 lg:w-72 bg-background rounded-lg border p-4 pt-1">
 						<p className="ml-4 mt-4 text-lg font-semibold tracking-tight">
 							Library
 						</p>
