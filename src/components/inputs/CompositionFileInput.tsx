@@ -94,6 +94,10 @@ export function CompositionFileInput({
 			onChange={async (e) => {
 				const inputFile = e.target.files?.[0];
 				if (!inputFile) return;
+				if (inputFile.size > 5000000)
+					return toast("File size cannot exceed 5 MB.", {
+						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
+					});
 
 				const response = await fetch(
 					process.env.NEXT_PUBLIC_API_BASE +
@@ -105,7 +109,9 @@ export function CompositionFileInput({
 						body: await inputFile.arrayBuffer(),
 					}
 				);
-				const result = await response.json().catch(() => ({ success: false }));
+				const result = await response
+					.json()
+					.catch((e) => ({ success: false, error: e }));
 
 				if (!result.success)
 					return toast(`Error uploading ${formattedType}`, {
@@ -113,7 +119,7 @@ export function CompositionFileInput({
 						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
 					});
 
-				toast(`Uploaded ${formattedType}`, {
+				toast(`${formattedType} uploaded!`, {
 					icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
 				});
 				setFile(result.file);
