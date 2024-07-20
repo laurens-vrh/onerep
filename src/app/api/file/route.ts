@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
 			success: false,
 			error: "Unsupported file type",
 		});
-	if (size > 2 ** 20 * 5)
+	if (size > 4500000)
 		return NextResponse.json({
 			success: false,
-			error: "File size cannot exceed 5 MB.",
+			error: "File size cannot exceed 4.5 MB.",
 		});
 
 	const sessionId = cookies().get("onerep:session")?.value;

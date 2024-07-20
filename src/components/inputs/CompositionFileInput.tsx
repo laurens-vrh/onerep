@@ -94,8 +94,8 @@ export function CompositionFileInput({
 			onChange={async (e) => {
 				const inputFile = e.target.files?.[0];
 				if (!inputFile) return;
-				if (inputFile.size > 5000000)
-					return toast("File size cannot exceed 5 MB.", {
+				if (inputFile.size > 4500000)
+					return toast("File size cannot exceed 4.5 MB.", {
 						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
 					});
 

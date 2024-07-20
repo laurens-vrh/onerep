@@ -39,7 +39,7 @@ const questions = [
 	{
 		question: "Can I upload my own sheet music or recordings?",
 		answer:
-			"Yes, OneRep allows you to upload PDF files of sheet music and audio recordings for each piece in your repertoire, with a file size limit of 5MB. These uploads are private.",
+			"Yes, OneRep allows you to upload PDF files of sheet music and audio recordings for each piece in your repertoire, with a file size limit of 4.5 MB. These uploads are private.",
 	},
 	{
 		question: "Is there a limit to how many pieces I can add to my repertoire?",
