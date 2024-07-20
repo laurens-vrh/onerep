@@ -1,0 +1,177 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pg_trgm]
+}
+
+// USER
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  emailVerified DateTime?
+  sessions      Session[]
+
+  email    String @unique
+  username String @unique
+  password String
+  role     Role   @default(USER)
+
+  lists          List[]
+  compositions   UserCompositionData[]
+  savedLists     List[]                @relation("savedLists")
+  savedComposers Composer[]
+
+  following      User[]   @relation("follow")
+  followers      User[]   @relation("follow")
+  updates        Update[] @relation("update")
+  relatedUpdates Update[] @relation("followupdate")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Session {
+  createdAt DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    Int
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Update {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  user   User       @relation("update", fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  type   UpdateType
+
+  relatedComposition   Composition? @relation(fields: [relatedCompositionId], references: [id], onDelete: Cascade)
+  relatedUser          User?        @relation("followupdate", fields: [relatedUserId], references: [id], onDelete: Cascade)
+  relatedList          List?        @relation(fields: [relatedListId], references: [id], onDelete: Cascade)
+  relatedComposer      Composer?    @relation(fields: [relatedComposerId], references: [id], onDelete: Cascade)
+  relatedCompositionId Int?
+  relatedUserId        Int?
+  relatedListId        Int?
+  relatedComposerId    Int?
+}
+
+enum UpdateType {
+  FAVORITE
+  REPERTOIRE
+  FOLLOW
+  CREATE_LIST
+  SAVE_COMPOSER
+  SAVE_LIST
+}
+
+// DATA
+
+model Composer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name         String
+  compositions Composition[]
+  approved     Boolean?
+  submittorId  Int
+  savedBy      User[]
+  updates      Update[]
+}
+
+model Composition {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  composers   Composer[]
+  approved    Boolean?
+  submittorId Int
+  lists       ListComposition[]
+  users       UserCompositionData[]
+  updates     Update[]
+}
+
+model List {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name         String
+  icon         Int
+  description  String?
+  custom       Boolean           @default(true)
+  userId       Int
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position     Int?
+  compositions ListComposition[]
+
+  savedBy User[]   @relation("savedLists")
+  updates Update[]
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  url  String
+  size Int
+  type FileType
+
+  userCompositionData UserCompositionData @relation(fields: [userId, compositionId], references: [userId, compositionId], onDelete: Restrict)
+  userId              Int
+  compositionId       Int
+
+  @@unique([userId, compositionId, type])
+}
+
+enum FileType {
+  SHEETMUSIC
+  PERFORMANCE
+}
+
+// RELATION TABLES
+
+model UserCompositionData {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  composition   Composition @relation(fields: [compositionId], references: [id], onDelete: Cascade)
+  compositionId Int
+
+  notes     String?
+  startDate DateTime?
+  endDate   DateTime?
+
+  files File[]
+
+  @@id([userId, compositionId])
+}
+
+model ListComposition {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  list          List        @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId        Int
+  composition   Composition @relation(fields: [compositionId], references: [id], onDelete: Cascade)
+  compositionId Int
+  position      Int
+
+  @@id([listId, compositionId])
+}
