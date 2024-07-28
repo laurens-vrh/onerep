@@ -1,13 +1,13 @@
 "use server";
 
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/database/prisma";
+import { getUserProfile } from "@/lib/database/User";
+import { storageBucket } from "@/lib/firebase";
+import { matchesWildcard } from "@/lib/utils";
 import { FileType } from "@prisma/client";
 import { getDownloadURL } from "firebase-admin/storage";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { getUserProfile } from "@/lib/database/User";
-import { storageBucket } from "@/lib/firebase";
-import { prisma } from "@/lib/database/prisma";
-import { matchesWildcard } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
 	const searchParams = request.nextUrl.searchParams;
@@ -30,14 +30,10 @@ export async function POST(request: NextRequest) {
 			error: "File size cannot exceed 4.5 MB.",
 		});
 
-	const sessionId = cookies().get("onerep:session")?.value;
-	const userId = sessionId
-		? (await prisma.session.findUnique({ where: { id: sessionId } }))?.userId ??
-		  0
-		: 0;
-	if (userId === 0) return new NextResponse("Bad Request", { status: 400 });
+	const session = await auth();
+	if (!session) return new NextResponse("Bad Request", { status: 400 });
 
-	const userProfile = await getUserProfile(userId);
+	const userProfile = await getUserProfile(session.user.id as string);
 	if (
 		!userProfile?.compositions.find((c) => c.composition.id === compositionId)
 	)
@@ -50,7 +46,7 @@ export async function POST(request: NextRequest) {
 		type === "application/pdf" ? FileType.SHEETMUSIC : FileType.PERFORMANCE;
 	const fileEntry = await prisma.file.findFirst({
 		where: {
-			userId: userId,
+			userId: session.user.id,
 			compositionId,
 			type: typeEnum,
 		},
@@ -63,7 +59,7 @@ export async function POST(request: NextRequest) {
 		});
 
 	try {
-		const fileRef = storageBucket.file(userId + "/" + name);
+		const fileRef = storageBucket.file(session.user.id + "/" + name);
 		await fileRef.save(new Uint8Array(await file.arrayBuffer()));
 		const url = await getDownloadURL(fileRef);
 
@@ -74,7 +70,7 @@ export async function POST(request: NextRequest) {
 					name,
 					url,
 					size,
-					userId,
+					userId: session.user.id,
 					compositionId,
 				},
 			})
@@ -90,7 +86,6 @@ export async function POST(request: NextRequest) {
 
 		return NextResponse.json({ success: true, file: databaseFile });
 	} catch (e: any) {
-		throw e;
 		return NextResponse.json({
 			success: false,
 			error: e.code,

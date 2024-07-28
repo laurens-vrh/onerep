@@ -18,6 +18,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { deleteFile } from "@/lib/actions/file";
+import { capitalizeFirst } from "@/lib/utils";
 import { File } from "@prisma/client";
 import { CircleCheck, CircleX, Download, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -119,7 +120,7 @@ export function CompositionFileInput({
 						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
 					});
 
-				toast(`${formattedType} uploaded!`, {
+				toast(`${capitalizeFirst(formattedType)} uploaded!`, {
 					icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
 				});
 				setFile(result.file);

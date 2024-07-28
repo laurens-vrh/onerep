@@ -16,6 +16,10 @@ export function matchesWildcard(path: string, pattern: string): boolean {
 	return path === pattern;
 }
 
+export function capitalizeFirst(string: string) {
+	return string[0].toUpperCase() + string.slice(1);
+}
+
 export const readableUrl = (
 	type: "list" | "composer" | "composition",
 	{ id, name }: { id: number; name: string }

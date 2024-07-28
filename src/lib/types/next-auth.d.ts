@@ -10,4 +10,6 @@ declare module "next-auth" {
 		extends Optional<
 			Pick<DatabaseUser, "id" | "username" | "email" | "role">
 		> {}
+
+	interface JWT extends User {}
 }
