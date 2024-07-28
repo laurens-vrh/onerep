@@ -9,7 +9,7 @@ export const getStatistics = cache(async () => {
 
 	return {
 		users: prisma.user.count(),
-		sessions: prisma.session.count(),
+		accounts: prisma.account.count(),
 		lists: prisma.list.count(),
 		customLists: prisma.list.count({
 			where: { custom: true },

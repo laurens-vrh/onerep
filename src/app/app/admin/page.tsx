@@ -52,7 +52,7 @@ export default async function Page() {
 							<CardContent>
 								<div className="text-2xl font-bold">{stats.users}</div>
 								<p className="text-xs text-muted-foreground">
-									{stats.sessions} sessions
+									{stats.accounts} accounts
 								</p>
 							</CardContent>
 						</Card>
