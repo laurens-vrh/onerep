@@ -6,6 +6,7 @@ import {
 } from "./User";
 import { cache } from "react";
 import { prisma } from "./prisma";
+import { auth } from "../auth";
 
 export type Update = Pick<DatabaseUpdate, "createdAt" | "type"> & {
 	user: Pick<User, "id" | "username">;
@@ -21,12 +22,16 @@ export type Update = Pick<DatabaseUpdate, "createdAt" | "type"> & {
 };
 
 export const getUpdates = cache(async (): Promise<Update[] | null> => {
-	const user = await getCurrentUser();
-	const userProfile = await getUserProfile(user?.id ?? 0);
-	if (!user || !userProfile) return null;
+	const session = await auth();
+	if (!session) return null;
+	const user = await prisma.user.findUnique({
+		where: { id: session.user.id },
+		select: { following: { select: { id: true } } },
+	});
+	if (!user) return null;
 
 	return await prisma.update.findMany({
-		where: { userId: { in: userProfile.following.map((u) => u.id) } },
+		where: { userId: { in: user.following.map((u) => u.id) } },
 		select: {
 			createdAt: true,
 			type: true,

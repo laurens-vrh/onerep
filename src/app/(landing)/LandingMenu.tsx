@@ -13,12 +13,9 @@ export function LandingMenu() {
 					OneRep
 				</Link>
 				<div className="flex gap-2">
-					<Button asChild variant="ghost">
-						<Link href="/auth/signin">Log In</Link>
-					</Button>
 					<Button asChild variant="default">
-						<Link href="/auth/signup">
-							Sign Up <ArrowRight className="w-4 h-4 ml-2" />
+						<Link href="/signin">
+							Launch <ArrowRight className="w-4 h-4 ml-2" />
 						</Link>
 					</Button>
 				</div>

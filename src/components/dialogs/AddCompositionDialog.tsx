@@ -26,6 +26,7 @@ import {
 	addCompositionFormSchema,
 	AddCompositionFormSchemaData,
 } from "@/lib/schemas";
+import { readableUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Composer } from "@prisma/client";
 import { CircleCheck, Plus } from "lucide-react";
@@ -75,7 +76,7 @@ export function AddCompositionDialog({
 				description: "It will be visible to everyone after verification.",
 				icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
 			});
-			router.push(`/app/composition/${result.id}`);
+			router.push(readableUrl("composition", result.composition));
 		} else if (result.error) form.setError(...result.error);
 	}
 

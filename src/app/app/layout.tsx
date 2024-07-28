@@ -1,8 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster } from "@/components/ui/sonner";
-import { getCurrentUser, getUserProfile } from "@/lib/database/User";
-import { AppLayout } from "./AppLayout";
+import { auth } from "@/lib/auth";
+import { getUserProfile } from "@/lib/database/User";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { redirect } from "next/navigation";
+import { AppLayout } from "./AppLayout";
 import Error from "./error";
 
 export default async function RootLayout({
@@ -10,7 +12,9 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const privateUser = (await getCurrentUser())!;
+	const privateUser = (await auth())?.user;
+	if (!privateUser) return redirect("/");
+
 	const user = {
 		...privateUser,
 		...(await getUserProfile(privateUser.id))!,

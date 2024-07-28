@@ -9,6 +9,7 @@ import {
 } from "@prisma/client";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
+import { auth } from "../auth";
 
 export type CompositionProfile = Pick<
 	Composition,
@@ -31,8 +32,8 @@ export type CompositionProfile = Pick<
 export const getComposition = cache(
 	async (id: number): Promise<CompositionProfile | null> => {
 		if (!id) return null;
-		const user = await getCurrentUser();
-		if (!user) return null;
+		const session = await auth();
+		if (!session) return null;
 
 		const composition = await prisma.composition.findUnique({
 			where: { id },
@@ -45,7 +46,7 @@ export const getComposition = cache(
 					select: { id: true, name: true },
 				},
 				users: {
-					where: { userId: user.id },
+					where: { userId: session.user.id },
 					select: {
 						createdAt: true,
 						updatedAt: true,
@@ -80,7 +81,7 @@ export const getComposition = cache(
 				composers: {
 					some: { id: { in: composition.composers.map((a) => a.id) } },
 				},
-				OR: [{ approved: true }, { submittorId: user.id }],
+				OR: [{ approved: true }, { submittorId: session.user.id }],
 			},
 			select: {
 				id: true,

@@ -8,6 +8,7 @@ import {
 	User,
 	UserCompositionData,
 } from "@prisma/client";
+import { auth } from "../auth";
 
 export type ListProfile = Pick<
 	List,
@@ -39,6 +40,9 @@ export type ListProfile = Pick<
 
 export const getList = cache(
 	async (id: number): Promise<ListProfile | null> => {
+		const session = await auth();
+		if (!session) return null;
+
 		const list = await prisma.list.findUnique({
 			where: { id },
 			select: {
@@ -88,13 +92,12 @@ export const getList = cache(
 										updatedAt: true,
 									},
 									where: {
-										userId:
-											(
-												await prisma.list.findUnique({
-													select: { userId: true },
-													where: { id },
-												})
-											)?.userId ?? 0,
+										userId: (
+											await prisma.list.findUnique({
+												select: { userId: true },
+												where: { id },
+											})
+										)?.userId,
 									},
 								},
 							},

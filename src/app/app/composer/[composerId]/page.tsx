@@ -17,13 +17,16 @@ import { Icons } from "@/components/Icons";
 import { GridCard } from "@/components/GridCard";
 import { prisma } from "@/lib/database/prisma";
 import { Metadata } from "next";
+import { readableUrl } from "@/lib/utils";
 
 export default async function Page({
 	params,
 }: {
 	params: { composerId: string };
 }) {
-	const composer = await getComposer(parseInt(params.composerId) ?? 0);
+	const composer = await getComposer(
+		parseInt(params.composerId.split("-")[0]) ?? 0
+	);
 	if (!composer)
 		return (
 			<>
@@ -70,7 +73,7 @@ export default async function Page({
 							}
 							initialComposers={[composer]}
 						/>
-						<ShareButton path={"/app/composer/" + composer.id} />
+						<ShareButton path={readableUrl("composer", composer)} />
 					</>
 				}
 			/>

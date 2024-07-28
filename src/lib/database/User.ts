@@ -1,3 +1,4 @@
+import { auth } from "@/lib/auth";
 import {
 	Composer,
 	Composition,
@@ -6,7 +7,6 @@ import {
 	User,
 	UserCompositionData,
 } from "@prisma/client";
-import { cookies } from "next/headers";
 import { cache } from "react";
 import { prisma } from "./prisma";
 import { Update } from "./Update";
@@ -47,16 +47,12 @@ export type UserProfile = PublicUser &
 	};
 
 export const getCurrentUser = cache(async (): Promise<PrivateUser | null> => {
-	const sessionId = cookies().get("onerep:session")?.value;
-	if (!sessionId) return null;
+	const session = await auth();
+	if (!session || !session.user) return null;
 
-	return prisma.user.findFirst({
+	return prisma.user.findUnique({
 		where: {
-			sessions: {
-				some: {
-					id: sessionId,
-				},
-			},
+			id: session.user.id,
 		},
 		select: {
 			id: true,
@@ -67,8 +63,20 @@ export const getCurrentUser = cache(async (): Promise<PrivateUser | null> => {
 	});
 });
 
+export const getUserProfileByUsername = cache(
+	async (username: string): Promise<UserProfile | null> => {
+		const user = await prisma.user.findUnique({
+			where: { username },
+			select: { id: true },
+		});
+		if (!user) return null;
+
+		return getUserProfile(user.id);
+	}
+);
+
 export const getUserProfile = cache(
-	(id: number): Promise<UserProfile | null> => {
+	(id: string): Promise<UserProfile | null> => {
 		return prisma.user.findUnique({
 			where: { id },
 			select: {

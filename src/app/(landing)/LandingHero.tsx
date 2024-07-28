@@ -60,7 +60,7 @@ export function LandingHero() {
 								<span className="text-sm">By Ludwig van Beethoven</span>
 							</div>
 						</div>
-						<div className="h-min grid grid-cols-[max-content_1fr] gap-y-1 gap-x-2 items-center">
+						<div className="h-min grid grid-cols-[max-content_1fr] gap-y-1 gap-x-2 items-center pointer-events-none">
 							<span className="text-right">Started</span>
 							<DatePicker date={new Date(Date.now() - 7 * 24 * 3600 * 1000)} />
 							<span className="text-right">Finished</span>

@@ -4,24 +4,24 @@ import { GeneralSaveButton } from "@/components/buttons/GeneralSaveButton";
 import { ShareButton } from "@/components/buttons/ShareButton";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
+import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { Icons } from "@/components/Icons";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getList } from "@/lib/database/List";
+import { prisma } from "@/lib/database/prisma";
 import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import { readableUrl } from "@/lib/utils";
+import { format } from "date-fns";
+import { Metadata } from "next";
 import Link from "next/link";
 import { ListCompositionsTable } from "./ListCompositionsTable";
-import { format } from "date-fns";
-import { GridCard } from "@/components/GridCard";
-import { Metadata } from "next";
-import { prisma } from "@/lib/database/prisma";
 
 export default async function Page({ params }: { params: { listId: string } }) {
 	const { id } = (await getCurrentUser())!;
 	const user = (await getUserProfile(id))!;
-	const list = await getList(parseInt(params.listId) ?? 0);
+	const list = await getList(parseInt(params.listId.split("-")[0]) ?? 0);
 	if (!list)
 		return (
 			<>
@@ -49,7 +49,7 @@ export default async function Page({ params }: { params: { listId: string } }) {
 					<>
 						By{" "}
 						<Link
-							href={`/app/user/${list.user.id}`}
+							href={`/app/user/${list.user.username}`}
 							className="hover:underline"
 						>
 							@{list.user.username}
@@ -69,7 +69,7 @@ export default async function Page({ params }: { params: { listId: string } }) {
 						{list.user.id !== user.id && list.custom && (
 							<GeneralSaveButton type="list" saved={saved} id={list.id} />
 						)}
-						<ShareButton path={"/app/list/" + list.id} />
+						<ShareButton path={readableUrl("list", list)} />
 						{list.user.id === user.id && <EditListButton list={list} />}
 					</>
 				}

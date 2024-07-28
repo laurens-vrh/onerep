@@ -25,6 +25,7 @@ import {
 	addComposerFormSchema,
 	AddComposerFormSchemaData,
 } from "@/lib/schemas";
+import { readableUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -67,7 +68,7 @@ export function AddComposerDialog({
 				description: "They will be visible to everyone after verification.",
 				icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
 			});
-			router.push(`/app/composer/${result.id}`);
+			router.push(readableUrl("composer", result.composer));
 		} else if (result.error) form.setError(...result.error);
 	}
 

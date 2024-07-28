@@ -1,12 +1,11 @@
 import { Update } from "@/lib/database/Update";
 import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Link from "next/link";
-import { CompositionCard } from "./cards/CompositionCard";
-import { Separator } from "./ui/separator";
-import { cn } from "@/lib/utils";
-import { ListCard } from "./cards/ListCard";
 import { ComposerCard } from "./cards/ComposerCard";
+import { CompositionCard } from "./cards/CompositionCard";
+import { ListCard } from "./cards/ListCard";
 import { UserCard } from "./cards/UserCard";
 
 export async function UpdateList({
@@ -51,7 +50,7 @@ export async function UpdateList({
 						REPERTOIRE: ` added ${update.relatedComposition?.name} to their repertoire!`,
 						FOLLOW: ` started following @${update.relatedUser?.username}!`,
 						CREATE_LIST: " created a new list!",
-						SAVE_COMPOSER: " saved an composer!",
+						SAVE_COMPOSER: " saved a composer!",
 						SAVE_LIST: " saved a list!",
 					}[update.type]
 				}

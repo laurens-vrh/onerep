@@ -5,6 +5,7 @@ import { SaveCompositionButton } from "@/components/buttons/SaveCompositionButto
 import { Button } from "@/components/ui/button";
 import { ComposerProfile } from "@/lib/database/Composer";
 import { UserProfile } from "@/lib/database/User";
+import { readableUrl } from "@/lib/utils";
 import { Composition } from "@prisma/client";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import {
@@ -58,7 +59,7 @@ export const composerCompositionTableColumns: (
 		},
 		cell: ({ row }) => (
 			<Link
-				href={`/app/composition/${row.original.id}`}
+				href={readableUrl("composition", row.original)}
 				className="hover:underline"
 			>
 				{row.original.name}

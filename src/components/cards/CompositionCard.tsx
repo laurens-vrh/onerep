@@ -4,6 +4,7 @@ import { FileMusic, ListCheck, ListPlus } from "lucide-react";
 import Link from "next/link";
 import { SaveCompositionButton } from "../buttons/SaveCompositionButton";
 import { SeparatorDot } from "../SeparatorDot";
+import { readableUrl } from "@/lib/utils";
 
 export function CompositionCard({
 	composition,
@@ -33,7 +34,7 @@ export function CompositionCard({
 	return (
 		<div className="relative">
 			<Link
-				href={`/app/composition/${composition.id}`}
+				href={readableUrl("composition", composition)}
 				className="absolute inset-0 peer"
 			/>
 			<li className="flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 border outline-none peer-hover:bg-accent">
@@ -43,13 +44,13 @@ export function CompositionCard({
 						<span className="w-full">{composition.name}</span>
 						<span className="text-sm">
 							By{" "}
-							{composition.composers.map((a, i) => (
+							{composition.composers.map((composer, i) => (
 								<Link
-									key={a.id}
-									href={`/app/composer/${a.id}`}
+									key={composer.id}
+									href={readableUrl("composer", composer)}
 									className="font-semibold hover:underline relative z-10"
 								>
-									{a.name}
+									{composer.name}
 									{i + 1 === composition.composers.length ? "" : ", "}
 								</Link>
 							))}

@@ -1,51 +1,48 @@
+import { auth } from "@/lib/auth";
 import { Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
 	const path = request.nextUrl.pathname;
-	const sessionId = request.cookies.get("onerep:session")?.value;
+	const sessionCookie = request.cookies.get("authjs.session-token");
+	const session =
+		sessionCookie &&
+		(await getToken({
+			req: request,
+			secret: process.env.AUTH_SECRET!,
+			salt: sessionCookie.name ?? "",
+		}));
 
 	if (path === "/") {
-		if (sessionId && request.nextUrl.searchParams.get("landing") !== "true")
+		if (session && request.nextUrl.searchParams.get("landing") !== "true")
 			return NextResponse.redirect(
-				process.env.NEXT_PUBLIC_BASE_URL + "/auth/signin"
+				process.env.NEXT_PUBLIC_BASE_URL + "/signin"
 			);
 		else return NextResponse.next();
 	}
 
-	function noSession(invalid: boolean) {
-		if (invalid) request.cookies.delete("onerep:session");
-
+	function noSession() {
 		if (request.nextUrl.pathname.startsWith("/app"))
 			return NextResponse.redirect(
 				process.env.NEXT_PUBLIC_BASE_URL +
-					"/auth/signin?redirectTo=" +
+					"/signin?redirectTo=" +
 					request.nextUrl.pathname +
 					request.nextUrl.search
 			);
-		else if (request.nextUrl.pathname.startsWith("/auth/")) {
+		else if (request.nextUrl.pathname === "/signin") {
 			return NextResponse.next();
 		} else return NextResponse.next();
 	}
 
-	if (!sessionId) return noSession(false);
-
-	const sessionResponse = await fetch(
-		process.env.NEXT_PUBLIC_API_BASE + "/session",
-		{
-			headers: { Cookie: `onerep:session=${sessionId}` },
-		}
-	);
-	const session = await sessionResponse.json().catch(() => {});
-	if (!session) return noSession(true);
-
+	if (!session) return noSession();
 	if (
 		request.nextUrl.pathname.startsWith("/app/admin") &&
-		session.user.role !== Role.ADMIN
+		session.role !== Role.ADMIN
 	)
 		return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL + "/app");
 
-	if (request.nextUrl.pathname.startsWith("/auth/"))
+	if (request.nextUrl.pathname === "/signin")
 		return NextResponse.redirect(
 			process.env.NEXT_PUBLIC_BASE_URL +
 				(request.nextUrl.searchParams.get("redirectTo") ?? "/app")

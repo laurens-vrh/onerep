@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/database/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { SearchResults } from "./SearchResults";
+import { auth } from "@/lib/auth";
 
 export async function GET(
 	request: NextRequest
@@ -8,12 +9,8 @@ export async function GET(
 	const searchTerm = request.nextUrl.searchParams.get("term")?.toLowerCase();
 	if (!searchTerm) return new NextResponse("Bad Request", { status: 400 });
 
-	const sessionId = request.cookies.get("onerep:session")?.value;
-	const userId = sessionId
-		? (await prisma.session.findUnique({ where: { id: sessionId } }))?.userId ??
-		  0
-		: 0;
-	if (userId === 0) return new NextResponse("Bad Request", { status: 400 });
+	const session = await auth();
+	if (!session) return new NextResponse("Bad Request", { status: 400 });
 
 	const limit = request.nextUrl.searchParams.get("full") === "true" ? 50 : 5;
 
@@ -23,7 +20,7 @@ export async function GET(
 			FROM "Composition" c
 			JOIN "_ComposerToComposition" ac ON c.id = ac."B"
 			JOIN "Composer" a ON ac."A" = a.id
-			WHERE (c.approved = true OR c."submittorId" = ${userId}) AND c.name % ${searchTerm}
+			WHERE (c.approved = true OR c."submittorId" = ${session.user.id}) AND SIMILARITY(c.name, ${searchTerm}) + SIMILARITY(a.name, ${searchTerm}) > 0.3
 			GROUP BY c.id
 			ORDER BY SIMILARITY(c.name, ${searchTerm}) DESC
 			LIMIT ${limit};
@@ -31,7 +28,7 @@ export async function GET(
 		prisma.$queryRaw`
 			SELECT a.id, a.name, jsonb_build_object('compositions',(SELECT COUNT(*)::integer FROM "_ComposerToComposition" ac WHERE ac."A" = a.id),'savedBy',(SELECT COUNT(*)::integer FROM "_ComposerToUser" ac WHERE ac."A" = a.id)) AS "_count"
 			FROM "Composer" a
-			WHERE (a.approved = true OR a."submittorId" = ${userId}) AND a.name % ${searchTerm}
+			WHERE (a.approved = true OR a."submittorId" = ${session.user.id}) AND a.name % ${searchTerm}
 			ORDER BY SIMILARITY(a.name, ${searchTerm}) DESC
 			LIMIT ${limit};
 		`,

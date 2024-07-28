@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { approveComposer, deleteComposer } from "@/lib/actions/composer";
-import { dataTableSelectColumn } from "@/lib/utils";
+import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import {
 	ArrowDown01,
@@ -75,7 +75,7 @@ export const composerColumns: ColumnDef<TableComposer>[] = [
 			);
 		},
 		cell: ({ row }) => (
-			<Link prefetch={false} href={`/app/composer/${row.original.id}`}>
+			<Link prefetch={false} href={readableUrl("composer", row.original)}>
 				{row.original.name}
 			</Link>
 		),

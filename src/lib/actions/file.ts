@@ -1,13 +1,13 @@
 "use server";
 
 import { Prisma } from "@prisma/client";
-import { getCurrentUser } from "../database/User";
-import { storageBucket } from "../firebase";
+import { auth } from "../auth";
 import { prisma } from "../database/prisma";
+import { storageBucket } from "../firebase";
 
 export async function deleteFile(id: number) {
-	const user = await getCurrentUser();
-	if (!user) return { success: false, error: "Uncomposerized" };
+	const session = await auth();
+	if (!session) return { success: false };
 
 	try {
 		const file = await prisma.file.delete({
@@ -15,7 +15,7 @@ export async function deleteFile(id: number) {
 				id,
 			},
 		});
-		await storageBucket.file(user.id + "/" + file.name).delete();
+		await storageBucket.file(session.user.id + "/" + file.name).delete();
 	} catch (error) {
 		if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
 		return { success: false, error: error.code + " " + error.name };

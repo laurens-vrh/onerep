@@ -12,15 +12,23 @@ import { SeparatorDot } from "@/components/SeparatorDot";
 import { Badge } from "@/components/ui/badge";
 import { UpdateList } from "@/components/UpdateList";
 import { prisma } from "@/lib/database/prisma";
-import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import {
+	getCurrentUser,
+	getUserProfile,
+	getUserProfileByUsername,
+} from "@/lib/database/User";
 import { Composer, Role } from "@prisma/client";
 import { format } from "date-fns";
 import { Shield, User } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export default async function Page({ params }: { params: { userId: string } }) {
-	const user = await getUserProfile(parseInt(params.userId) ?? 0);
+export default async function Page({
+	params,
+}: {
+	params: { username: string };
+}) {
+	const user = await getUserProfileByUsername(params.username);
 	if (!user)
 		return (
 			<>
@@ -35,12 +43,18 @@ export default async function Page({ params }: { params: { userId: string } }) {
 	const composers = user.lists
 		.reduce((previous, current) => {
 			current.compositions.forEach((c) => {
-				c.composition.composers.forEach((a) => {
-					if (!previous.find((a2) => a.id === a2.id)) previous.push(a);
+				c.composition.composers.forEach((composer) => {
+					const previousComposer = previous.find((c2) => composer.id === c2.id);
+					previous = previous.filter((c2) => c2.id !== composer.id);
+					previous.push({
+						...composer,
+						count: (previousComposer?.count ?? 0) + 1,
+					});
 				});
 			});
 			return previous;
-		}, [] as Pick<Composer, "id" | "name">[])
+		}, [] as (Pick<Composer, "id" | "name"> & { count?: number })[])
+		.toSorted((a, b) => (b.count ?? 0) - (a.count ?? 0))
 		.slice(0, 9);
 
 	return (
@@ -78,7 +92,7 @@ export default async function Page({ params }: { params: { userId: string } }) {
 								saved={!!currentUser.following.find((u) => u.id === user.id)}
 							/>
 						)}
-						<ShareButton path={"/app/user/" + user.id} />
+						<ShareButton path={"/app/user/" + user.username} />
 					</>
 				}
 			/>
@@ -152,10 +166,10 @@ export default async function Page({ params }: { params: { userId: string } }) {
 export async function generateMetadata({
 	params,
 }: {
-	params: { userId: string };
+	params: { username: string };
 }): Promise<Metadata> {
 	const user = await prisma.user.findUnique({
-		where: { id: parseInt(params.userId) ?? 0 },
+		where: { username: params.username },
 		select: { username: true },
 	});
 	return {

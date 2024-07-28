@@ -9,30 +9,28 @@ import {
 	UpdateType,
 	UserCompositionData,
 } from "@prisma/client";
-import { getComposition } from "../database/Composition";
+import { auth } from "../auth";
 import { getList } from "../database/List";
-import { getUserProfile } from "../database/User";
-import { getCurrentUser } from "../database/User";
-import { getSession } from "../database/Session";
+import { prisma } from "../database/prisma";
+import { createUpdate } from "../database/Update";
+import { getCurrentUser, getUserProfile } from "../database/User";
+import { storageBucket } from "../firebase";
+import {
+	AddCompositionFormSchemaData,
+	addCompositionFormSchema,
+} from "../schemas";
 import {
 	AddCompositionFormResponse,
 	ApproveCompositionResponse,
 	ToastResponse,
 } from "../types/responses";
-import { prisma } from "../database/prisma";
-import {
-	AddCompositionFormSchemaData,
-	addCompositionFormSchema,
-} from "../schemas";
-import { storageBucket } from "../firebase";
-import { createUpdate } from "../database/Update";
 
 export async function addComposition(
 	data: AddCompositionFormSchemaData
 ): Promise<AddCompositionFormResponse> {
 	if (addCompositionFormSchema.safeParse(data).success === false)
 		return { success: false };
-	const session = await getSession();
+	const session = await auth();
 	if (!session) return { success: false };
 
 	if (data.composers.length === 0)
@@ -45,16 +43,17 @@ export async function addComposition(
 		const composition = await prisma.composition.create({
 			data: {
 				name: data.name,
-				submittorId: session.userId,
+				submittorId: session.user.id,
 				composers: {
 					connect: data.composers.map((id) => ({
 						id,
 					})),
 				},
 			},
+			select: { id: true, name: true },
 		});
 
-		return { success: true, id: composition.id };
+		return { success: true, composition };
 	} catch (error) {
 		if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
 		if (error.code === "P2025")
@@ -71,9 +70,9 @@ export async function approveComposition(
 	id: number,
 	approved: boolean | null
 ): Promise<ApproveCompositionResponse> {
-	const user = await getCurrentUser();
-	if (user?.role !== Role.ADMIN)
-		return { success: false, error: "Uncomposerized" };
+	const session = await auth();
+	if (session?.user.role !== Role.ADMIN)
+		return { success: false, error: "Unauthorized" };
 
 	try {
 		await prisma.composition.update({ where: { id }, data: { approved } });
@@ -89,9 +88,9 @@ export async function approveCompositions(
 	ids: number[],
 	approved: boolean | null
 ): Promise<ApproveCompositionResponse> {
-	const user = await getCurrentUser();
-	if (user?.role !== Role.ADMIN)
-		return { success: false, error: "Uncomposerized" };
+	const session = await auth();
+	if (session?.user.role !== Role.ADMIN)
+		return { success: false, error: "Unauthorized" };
 
 	try {
 		await prisma.composition.updateMany({
@@ -119,8 +118,8 @@ export async function saveComposition(
 			};
 	  }
 > {
-	const user = await getCurrentUser();
-	if (!user) return { success: false };
+	const session = await auth();
+	if (!session) return { success: false };
 
 	try {
 		const list = await prisma.list.findUnique({
@@ -180,7 +179,7 @@ export async function saveComposition(
 		if (save)
 			await prisma.userCompositionData.upsert({
 				create: {
-					userId: user.id,
+					userId: session.user.id,
 					compositionId: id,
 				},
 				update: {
@@ -188,13 +187,13 @@ export async function saveComposition(
 				},
 				where: {
 					userId_compositionId: {
-						userId: user.id,
+						userId: session.user.id,
 						compositionId: id,
 					},
 				},
 			});
 		else if (
-			!(await getUserProfile(user.id))?.lists
+			!(await getUserProfile(session.user.id))?.lists
 				.reduce(
 					(accumulator, currentValue) => [
 						...accumulator,
@@ -206,22 +205,22 @@ export async function saveComposition(
 		) {
 			const files = await prisma.file.findMany({
 				where: {
-					userId: user.id,
+					userId: session.user.id,
 					compositionId: id,
 				},
 			});
 			await Promise.all(
 				files.map((file) =>
-					storageBucket.file(user.id + "/" + file.name).delete()
+					storageBucket.file(session.user.id + "/" + file.name).delete()
 				)
 			);
 			await prisma.file.deleteMany({
-				where: { userId: user.id, compositionId: id },
+				where: { userId: session.user.id, compositionId: id },
 			});
 
 			await prisma.userCompositionData.delete({
 				where: {
-					userId_compositionId: { userId: user.id, compositionId: id },
+					userId_compositionId: { userId: session.user.id, compositionId: id },
 				},
 			});
 		}
@@ -234,9 +233,9 @@ export async function saveComposition(
 }
 
 export async function deleteComposition(id: number): Promise<ToastResponse> {
-	const user = await getCurrentUser();
-	if (user?.role !== Role.ADMIN)
-		return { success: false, error: "Uncomposerized" };
+	const session = await auth();
+	if (session?.user.role !== Role.ADMIN)
+		return { success: false, error: "Unauthorized" };
 
 	try {
 		await prisma.composition.delete({ where: { id } });
@@ -252,12 +251,14 @@ export async function updateUserCompositionData(
 	id: number,
 	data: Partial<UserCompositionData>
 ) {
-	const user = await getCurrentUser();
-	if (!user) return { success: false };
+	const session = await auth();
+	if (!session) return { success: false };
 
 	try {
 		await prisma.userCompositionData.update({
-			where: { userId_compositionId: { userId: user.id, compositionId: id } },
+			where: {
+				userId_compositionId: { userId: session.user.id, compositionId: id },
+			},
 			data: data,
 		});
 	} catch (error) {
@@ -274,8 +275,8 @@ export async function updatePosition(
 	oldPosition: number,
 	offset: number
 ) {
-	const user = await getCurrentUser();
-	if (!user) return { success: false };
+	const session = await auth();
+	if (!session) return { success: false };
 	if (offset !== 1 && offset !== -1) return { success: false };
 
 	const newPosition = oldPosition + offset;
@@ -285,7 +286,7 @@ export async function updatePosition(
 	try {
 		const list = await prisma.list.findUnique({
 			where: {
-				userId: user.id,
+				userId: session.user.id,
 				id: listId,
 				compositions: { some: { compositionId } },
 			},

@@ -2,6 +2,7 @@ import { List, User } from "@prisma/client";
 import Link from "next/link";
 import { Icons } from "../Icons";
 import { SeparatorDot } from "../SeparatorDot";
+import { readableUrl } from "@/lib/utils";
 
 export function ListCard({
 	list,
@@ -20,7 +21,7 @@ export function ListCard({
 	return (
 		<div className="relative" key={list.id}>
 			<Link
-				href={`/app/list/${list.id}`}
+				href={readableUrl("list", list)}
 				className="absolute inset-0 peer"
 			></Link>
 			<li className="flex cursor-pointer select-none items-center rounded-sm px-3 py-2 border outline-none peer-hover:bg-accent">
@@ -32,7 +33,7 @@ export function ListCard({
 							<>
 								By
 								<Link
-									href={`/app/user/${list.user.id}`}
+									href={`/app/user/${list.user.username}`}
 									className="ml-[0.2rem] font-semibold hover:underline relative z-10"
 								>
 									@{list.user.username}

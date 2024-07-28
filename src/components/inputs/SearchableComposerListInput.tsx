@@ -45,12 +45,12 @@ export function SearchableComposerListInput({
 						className="px-2 py-1.5 mb-2 rounded-lg border flex justify-between items-center text-sm"
 						key={a.id}
 					>
-						<div className="flex">
-							<Icons.composer className="mr-2  h-4 w-4" />
+						<div className="flex items-center">
+							<Icons.composer className="mr-2 h-4 w-4" />
 							<span>{a.name}</span>
 						</div>
 						<X
-							className="h-[80%] cursor-pointer"
+							className="w-4 h-4 cursor-pointer"
 							onClick={() => {
 								const newSelection = selection.filter((s) => s.id !== a.id);
 								setSelection(newSelection);

@@ -11,7 +11,7 @@ import {
 	approveComposition,
 	deleteComposition,
 } from "@/lib/actions/composition";
-import { dataTableSelectColumn } from "@/lib/utils";
+import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import {
 	ArrowDown01,
@@ -73,7 +73,7 @@ export const compositionColumns: ColumnDef<TableComposition>[] = [
 			);
 		},
 		cell: ({ row }) => (
-			<Link prefetch={false} href={`/app/composition/${row.original.id}`}>
+			<Link prefetch={false} href={readableUrl("composition", row.original)}>
 				{row.original.name}
 			</Link>
 		),

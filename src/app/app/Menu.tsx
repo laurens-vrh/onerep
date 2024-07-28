@@ -4,6 +4,16 @@ import { AddComposerDialog } from "@/components/dialogs/AddComposerDialog";
 import { AddCompositionDialog } from "@/components/dialogs/AddCompositionDialog";
 import { Icons } from "@/components/Icons";
 import { ListForm } from "@/components/inputs/ListForm";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -24,7 +34,8 @@ import {
 } from "@/components/ui/menubar";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { createList } from "@/lib/actions/list";
-import { deleteAccount, signOut } from "@/lib/actions/user";
+import { deleteAccount } from "@/lib/actions/user";
+import { signOut as authSignOut, signOut } from "next-auth/react";
 import { PrivateUser, UserProfile } from "@/lib/database/User";
 import { listFormSchema, ListFormSchemaData } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
@@ -37,25 +48,15 @@ import {
 	MoonIcon,
 	SunIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { list } from "postcss";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { MainSearch } from "./MainSearch";
 import { Sidebar } from "./Sidebar";
-import { useTheme } from "next-themes";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { list } from "postcss";
 
 export function Menu({
 	user,
@@ -221,7 +222,8 @@ export function Menu({
 							onClick={async () => {
 								if (!list) return;
 
-								await deleteAccount();
+								deleteAccount();
+								signOut();
 								setDeleteAccountDialogOpen(false);
 							}}
 						>
@@ -307,7 +309,7 @@ export function Menu({
 						</MenubarItem>
 						<MenubarSeparator />
 						<MenubarItem onSelect={(event) => event.preventDefault()} asChild>
-							<button className="w-full" onClick={() => signOut()}>
+							<button className="w-full" onClick={() => authSignOut()}>
 								Sign Out
 							</button>
 						</MenubarItem>

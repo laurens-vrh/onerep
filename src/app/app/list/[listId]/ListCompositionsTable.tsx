@@ -20,7 +20,7 @@ import {
 import { ListProfile } from "@/lib/database/List";
 import { UserProfile } from "@/lib/database/User";
 import { ArrayElement } from "@/lib/types/utilities";
-import { dataTableSelectColumn } from "@/lib/utils";
+import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
 import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
@@ -163,20 +163,20 @@ export const listCompositionTableColumns: (
 		cell: ({ row }) => (
 			<>
 				<Link
-					href={`/app/composition/${row.original.composition.id}`}
+					href={readableUrl("composition", row.original.composition)}
 					className="hover:underline font-semibold"
 				>
 					<span className="w-full">{row.original.composition.name}</span>
 				</Link>
 				<p className="text-sm">
 					By{" "}
-					{row.original.composition.composers.map((a, i) => (
+					{row.original.composition.composers.map((composer, i) => (
 						<Link
-							key={a.id}
-							href={`/app/composer/${a.id}`}
+							key={composer.id}
+							href={readableUrl("composer", composer)}
 							className=" hover:underline relative z-10"
 						>
-							{a.name}
+							{composer.name}
 							{i + 1 === row.original.composition.composers.length ? "" : ", "}
 						</Link>
 					))}
@@ -217,18 +217,25 @@ export const listCompositionTableColumns: (
 						});
 
 						const meta = table.options.meta as TableMeta;
-						const oldRow = meta.data.find(
-							(r) => r.composition.id === row.original.composition.id
-						)!;
-						oldRow.composition.users = [
-							{ ...row.original.composition.users[0], endDate: date ?? null },
-						];
-						meta.setData([
-							...meta.data.filter(
-								(r) => r.composition.id !== row.original.composition.id
-							),
-							oldRow,
-						]);
+						const rowIndex = meta.data.findIndex(
+							(c) => c.composition.id === row.original.composition.id
+						);
+						const data = [...meta.data];
+						data[rowIndex].composition.users[0].endDate = date ?? null;
+						meta.setData(data);
+
+						// 	meta.data.find(
+						// 	(r) => r.composition.id === row.original.composition.id
+						// )!;
+						// oldRow.composition.users = [
+						// 	{ ...row.original.composition.users[0], endDate: date ?? null },
+						// ];
+						// meta.setData([
+						// 	...meta.data.filter(
+						// 		(r) => r.composition.id !== row.original.composition.id
+						// 	),
+						// 	oldRow,
+						// ]);
 					}}
 				/>
 			) : row.original.composition.users[0].endDate ? (

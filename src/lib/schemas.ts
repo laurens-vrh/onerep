@@ -1,31 +1,20 @@
 import { Icons } from "@/components/Icons";
 import { z } from "zod";
 
-export type UserSignUpFormSchemaData = z.infer<typeof userSignUpFormSchema>;
-export const userSignUpFormSchema = z
-	.object({
-		username: z
-			.string()
-			.toLowerCase()
-			.min(4, { message: "Username must be between 4 and 32 characters" })
-			.max(32, { message: "Username must be between 4 and 32 characters" })
-			.regex(/^[a-z0-9-]+$/i, {
-				message: "Username can only contain letters, numbers, and -",
-			}),
-		email: z.string().email(),
-		password: z.string(),
-		confirmPassword: z.string(),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords don't match",
-		path: ["confirmPassword"],
-	});
-
-export type UserSignInFormSchemaData = z.infer<typeof userSignUpFormSchema>;
-export const userSignInFormSchema = z.object({
+export type SignInData = z.infer<typeof signInSchema>;
+export const signInSchema = z.object({
 	email: z.string().email(),
 	password: z.string(),
 });
+
+/*z
+		.string()
+		.toLowerCase()
+		.min(4, { message: "Username must be between 4 and 32 characters" })
+		.max(32, { message: "Username must be between 4 and 32 characters" })
+		.regex(/^[a-z0-9-]+$/i, {
+			message: "Username can only contain letters, numbers, and -",
+		}),*/
 
 export type AddCompositionFormSchemaData = z.infer<
 	typeof addCompositionFormSchema

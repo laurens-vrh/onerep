@@ -9,11 +9,13 @@ export function GeneralSaveButton({
 	type,
 	id,
 	saved,
-}: {
-	type: "list" | "composer" | "user";
-	id: number;
-	saved: boolean;
-}) {
+}: { saved: boolean } & (
+	| {
+			type: "list" | "composer";
+			id: number;
+	  }
+	| { type: "user"; id: string }
+)) {
 	const router = useRouter();
 
 	return (
@@ -21,7 +23,7 @@ export function GeneralSaveButton({
 			className="outline-none select-none cursor-pointer"
 			variant={saved ? "secondary" : "default"}
 			onClick={async () => {
-				await generalSave(type, id, !saved);
+				await generalSave({ type, id, save: !saved } as any);
 				router.refresh();
 			}}
 		>

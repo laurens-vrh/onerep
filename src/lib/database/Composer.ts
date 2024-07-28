@@ -1,8 +1,8 @@
-import { cache } from "react";
-import { prisma } from "./prisma";
-import { getCurrentUser } from "./User";
-import { Composer, Composition } from "@prisma/client";
 import { ListCard } from "@/components/cards/ListCard";
+import { Composer, Composition } from "@prisma/client";
+import { cache } from "react";
+import { auth } from "../auth";
+import { prisma } from "./prisma";
 
 export type ComposerProfile = Pick<Composer, "id" | "name" | "approved"> & {
 	_count: {
@@ -16,8 +16,8 @@ export type ComposerProfile = Pick<Composer, "id" | "name" | "approved"> & {
 
 export const getComposer = cache(
 	async (id: number): Promise<ComposerProfile | null> => {
-		const user = await getCurrentUser();
-		if (!user) return null;
+		const session = await auth();
+		if (!session) return null;
 
 		const [composer, listsWithComposer] = await Promise.all([
 			prisma.composer.findUnique({
@@ -29,7 +29,7 @@ export const getComposer = cache(
 					_count: { select: { savedBy: true } },
 					compositions: {
 						where: {
-							OR: [{ approved: true }, { submittorId: user.id }],
+							OR: [{ approved: true }, { submittorId: session.user.id }],
 						},
 						select: {
 							id: true,

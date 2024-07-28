@@ -6,18 +6,18 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { UserProfile } from "@/lib/database/User";
-import { List, Role, User } from "@prisma/client";
+import { List, Role } from "@prisma/client";
 import {
 	CircleUser,
 	LayoutPanelTop,
 	LockKeyholeOpen,
-	MenuIcon,
 	Pencil,
 	UserIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MainSearch } from "./MainSearch";
+import { readableUrl } from "@/lib/utils";
 
 export function Sidebar({
 	user,
@@ -50,7 +50,7 @@ export function Sidebar({
 				list: Pick<List, "id" | "name" | "icon" | "description">;
 		  }) {
 		const Icon = Icons.listIcons[list.icon];
-		const url = `/app/list/${list.id}`;
+		const url = readableUrl("list", list);
 		return (
 			<div
 				key={list.id}
@@ -61,7 +61,7 @@ export function Sidebar({
 				<Link href={url} className="flex-1">
 					<Button
 						variant="ghost"
-						className="justify-start hover:bg-transparent"
+						className="justify-start hover:bg-transparent pr-0"
 						asChild
 					>
 						<div>
@@ -82,15 +82,15 @@ export function Sidebar({
 		);
 	}
 
-	function userLink(u: Pick<User, "id" | "username">) {
-		const url = `/app/user/${u.id}`;
+	function userLink(username: string) {
+		const url = "/app/user/" + username;
 		return (
-			<Link key={u.id} href={url}>
+			<Link key={username} href={url}>
 				<Button
 					variant={pathname === url ? "secondary" : "ghost"}
 					className="w-full justify-start"
 				>
-					<UserIcon className="mr-2 h-4 w-4" />@{u.username}
+					<UserIcon className="mr-2 h-4 w-4" />@{username}
 				</Button>
 			</Link>
 		);
@@ -113,10 +113,10 @@ export function Sidebar({
 						Home
 					</Button>
 				</Link>
-				<Link href={"/app/user/" + user.id}>
+				<Link href={"/app/user/" + user.username}>
 					<Button
 						variant={
-							pathname === "/app/user/" + user.id ? "secondary" : "ghost"
+							pathname === "/app/user/" + user.username ? "secondary" : "ghost"
 						}
 						className="w-full justify-start"
 					>
@@ -160,11 +160,11 @@ export function Sidebar({
 							Friends
 						</p>
 						<div>
-							{friends.map(userLink)}
+							{friends.map((u) => userLink(u.username))}
 							{friends.length > 0 && following.length > 0 && (
 								<Separator className="my-2 mx-auto w-[calc(100%-2*12px)]" />
 							)}
-							{following.map(userLink)}
+							{following.map((u) => userLink(u.username))}
 						</div>
 					</>
 				)}

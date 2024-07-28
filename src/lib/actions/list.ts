@@ -5,20 +5,22 @@ import { getCurrentUser } from "../database/User";
 import { prisma } from "../database/prisma";
 import { listFormSchema } from "../schemas";
 import { createUpdate } from "../database/Update";
+import { auth } from "../auth";
 
 export async function createList(data: {
-	userId: number;
 	name: string;
 	icon: number;
 	description?: string;
 }) {
 	if (listFormSchema.safeParse(data).success === false)
 		return { success: false };
-	const user = await getCurrentUser();
-	if (!user) return { success: false };
+	const session = await auth();
+	if (!session) return { success: false };
 
 	try {
-		var list = await prisma.list.create({ data });
+		var list = await prisma.list.create({
+			data: { ...data, userId: session.user.id },
+		});
 		createUpdate({ type: "CREATE_LIST", relatedListId: list.id });
 	} catch (error) {
 		if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
@@ -34,12 +36,12 @@ export async function updateList(
 ) {
 	if (listFormSchema.safeParse(data).success === false)
 		return { success: false };
-	const user = await getCurrentUser();
-	if (!user) return { success: false };
+	const session = await auth();
+	if (!session) return { success: false };
 
 	try {
 		await prisma.list.update({
-			where: { id, userId: user.id },
+			where: { id, userId: session.user.id },
 			data: data,
 		});
 	} catch (error) {

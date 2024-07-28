@@ -17,12 +17,10 @@ export default function Error({
 
 	return (
 		<div className="grid w-full h-full place-items-center">
-			<div>
-				<Heading level={2}>Something went wrong!</Heading>
-				<Button className="mt-2" onClick={() => reset()}>
-					Try again
-				</Button>
-			</div>
+			<Heading level={2}>Something went wrong!</Heading>
+			<Button className="mt-2" onClick={() => reset()}>
+				Try again
+			</Button>
 		</div>
 	);
 }

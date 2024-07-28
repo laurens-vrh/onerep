@@ -4,25 +4,27 @@ import { SaveCompositionButton } from "@/components/buttons/SaveCompositionButto
 import { ShareButton } from "@/components/buttons/ShareButton";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
+import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getComposition } from "@/lib/database/Composition";
+import { prisma } from "@/lib/database/prisma";
 import { getCurrentUser, getUserProfile } from "@/lib/database/User";
 import { FileMusic } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { UserCompositionData } from "./UserCompositionData";
-import { GridCard } from "@/components/GridCard";
-import { prisma } from "@/lib/database/prisma";
-import { Metadata } from "next";
+import { readableUrl } from "@/lib/utils";
 
 export default async function Page({
 	params,
 }: {
 	params: { compositionId: string };
 }) {
-	const composition = await getComposition(parseInt(params.compositionId) ?? 0);
+	const composition = await getComposition(
+		parseInt(params.compositionId.split("-")[0]) ?? 0
+	);
 	if (!composition)
 		return (
 			<>
@@ -46,7 +48,7 @@ export default async function Page({
 						{composition.composers.map((composer, i) => (
 							<Link
 								key={composer.id}
-								href={`/app/composer/${composer.id}`}
+								href={readableUrl("composer", composer)}
 								className="hover:underline"
 							>
 								{composer.name}
@@ -68,7 +70,7 @@ export default async function Page({
 				actions={
 					<>
 						<SaveCompositionButton composition={composition} user={user} />
-						<ShareButton path={"/app/composition/" + composition.id} />
+						<ShareButton path={readableUrl("composition", composition)} />
 					</>
 				}
 			/>

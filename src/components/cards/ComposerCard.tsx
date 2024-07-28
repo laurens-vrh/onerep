@@ -3,6 +3,7 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { SeparatorDot } from "../SeparatorDot";
 import { Icons } from "../Icons";
+import { readableUrl } from "@/lib/utils";
 
 export function ComposerCard({
 	composer,
@@ -12,7 +13,7 @@ export function ComposerCard({
 	};
 }) {
 	return (
-		<Link href={`/app/composer/${composer.id}`}>
+		<Link href={readableUrl("composer", composer)}>
 			<li className="flex cursor-pointer select-none items-center rounded-sm px-3 py-2 border outline-none hover:bg-accent">
 				<Icons.composer className="mr-2 h-6 w-6" />
 				<div className="grid grid-cols-1">
