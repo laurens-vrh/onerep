@@ -1,17 +1,19 @@
 import { Role } from "@prisma/client";
-import { getToken } from "next-auth/jwt";
+import { decode } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(request: NextRequest) {
 	const path = request.nextUrl.pathname;
-	const sessionCookie = request.cookies.get("authjs.session-token");
-	const session =
-		sessionCookie &&
-		(await getToken({
-			req: request,
-			secret: process.env.AUTH_SECRET!,
-			salt: sessionCookie.name ?? "",
-		}));
+	const cookie = request.cookies
+		.getAll()
+		.find((c) => c.name.endsWith("authjs.session-token"));
+	const session = !cookie
+		? null
+		: await decode({
+				token: cookie?.value,
+				salt: cookie.name,
+				secret: process.env.AUTH_SECRET,
+		  }).catch(() => null);
 
 	if (path === "/") {
 		if (session && request.nextUrl.searchParams.get("landing") !== "true")
