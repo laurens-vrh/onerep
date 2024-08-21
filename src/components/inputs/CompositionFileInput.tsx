@@ -17,9 +17,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { deleteFile } from "@/lib/actions/file";
+import { deleteFile, getFile, uploadFile } from "@/lib/actions/file";
 import { capitalizeFirst } from "@/lib/utils";
-import { File } from "@prisma/client";
+import { File, FileType } from "@prisma/client";
 import { CircleCheck, CircleX, Download, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -95,35 +95,48 @@ export function CompositionFileInput({
 			onChange={async (e) => {
 				const inputFile = e.target.files?.[0];
 				if (!inputFile) return;
-				if (inputFile.size > 4500000)
-					return toast("File size cannot exceed 4.5 MB.", {
+				if (inputFile.size > 5 * 2 ** 20)
+					return toast("File size cannot exceed 5 MB", {
 						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
 					});
 
-				const response = await fetch(
-					process.env.NEXT_PUBLIC_API_BASE +
-						`/file?compositionId=${compositionId}&name=${encodeURIComponent(
-							inputFile.name
-						)}&type=${inputFile.type}`,
-					{
-						method: "POST",
-						body: await inputFile.arrayBuffer(),
-					}
-				);
-				const result = await response
-					.json()
-					.catch((e) => ({ success: false, error: e }));
+				try {
+					const result = await uploadFile({
+						compositionId,
+						name: inputFile.name,
+						type: inputFile.type,
+					});
+					if (!result?.success) throw result?.error;
 
-				if (!result.success)
-					return toast(`Error uploading ${formattedType}`, {
-						description: result.error ?? "",
+					const uploadResponse = await fetch(result.url!, {
+						method: "PUT",
+						headers: {
+							"Content-Type": inputFile.type,
+						},
+						body: inputFile,
+					});
+					if (!uploadResponse.ok) throw "Upload failed";
+
+					const fileReponse = await getFile({
+						compositionId,
+						name: inputFile.name,
+						type:
+							type === "sheetMusic"
+								? FileType.SHEETMUSIC
+								: FileType.PERFORMANCE,
+					});
+					if (!fileReponse?.success) throw fileReponse?.error;
+
+					toast(`${capitalizeFirst(formattedType)} uploaded!`, {
+						icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
+					});
+					setFile(fileReponse.file);
+				} catch (error: any) {
+					toast(`Error uploading ${formattedType}`, {
+						description: error ?? "",
 						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
 					});
-
-				toast(`${capitalizeFirst(formattedType)} uploaded!`, {
-					icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-				});
-				setFile(result.file);
+				}
 			}}
 		/>
 	);
