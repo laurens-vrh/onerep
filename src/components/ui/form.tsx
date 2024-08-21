@@ -150,7 +150,7 @@ const FormMessage = React.forwardRef<
 	const { error, formMessageId } = useFormField();
 	const body = error ? String(error?.message) : children;
 
-	if (!body) {
+	if (!body && !children) {
 		return null;
 	}
 
@@ -161,7 +161,7 @@ const FormMessage = React.forwardRef<
 			className={cn("text-sm font-medium text-destructive", className)}
 			{...props}
 		>
-			{body}
+			{body ?? children}
 		</p>
 	);
 });

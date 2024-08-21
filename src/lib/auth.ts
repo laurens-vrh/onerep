@@ -1,15 +1,24 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import NextAuth, { Session } from "next-auth";
+import NextAuth, { CredentialsSignin, Session } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Twitch from "next-auth/providers/twitch";
 import { prisma } from "./database/prisma";
+import { SignInData, signInSchema } from "./schemas";
+import { compare } from "bcryptjs";
+
+function credentialsError(code: string) {
+	const error = new CredentialsSignin();
+	error.code = code;
+	return error;
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	adapter: PrismaAdapter(prisma),
 	pages: {
-		signIn: "/signin",
+		signIn: "/auth/signin",
 	},
 	session: {
 		strategy: "jwt",
@@ -79,6 +88,41 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					email: profile.email,
 					image: profile.picture,
 					username: profile.preferred_username,
+				};
+			},
+		}),
+		Credentials({
+			async authorize(credentials) {
+				const { success } = signInSchema.safeParse(credentials);
+				if (!success) return null;
+				const { usernameOrEmail, password } = credentials as SignInData;
+
+				const user = await prisma.user.findFirst({
+					where: {
+						OR: [
+							{ username: { mode: "insensitive", equals: usernameOrEmail } },
+							{ email: usernameOrEmail.toLowerCase() },
+						],
+					},
+					select: {
+						id: true,
+						email: true,
+						username: true,
+						role: true,
+						password: true,
+					},
+				});
+
+				if (!user) throw credentialsError("INVALID_CREDENTIALS");
+				if (!user.password) throw credentialsError("MISSING_PASSWORD");
+				if (!(await compare(password, user.password)))
+					throw credentialsError("INVALID_CREDENTIALS");
+
+				return {
+					id: user.id,
+					email: user.email,
+					username: user.username,
+					role: user.role,
 				};
 			},
 		}),

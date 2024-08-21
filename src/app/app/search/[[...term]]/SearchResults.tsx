@@ -100,7 +100,7 @@ export function SearchResults({
 					</CardHeader>
 					<CardContent className="grid grid-cols-2 gap-2">
 						{results.users.map((u) => (
-							<UserCard key={u.id} user={u} />
+							<UserCard key={u.username} user={u} />
 						))}
 					</CardContent>
 				</Card>

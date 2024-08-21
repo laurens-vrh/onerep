@@ -203,7 +203,7 @@ export function MainSearch({
 								</span>
 								<ul className="mt-2 flex flex-col gap-2">
 									{users.map((user) => (
-										<UserCard key={user.id} user={user} />
+										<UserCard key={user.username} user={user} />
 									))}
 								</ul>
 							</div>

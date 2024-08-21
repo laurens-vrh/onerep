@@ -97,7 +97,7 @@ export function Menu({
 
 	async function onCreateListFormSubmit(values: ListFormSchemaData) {
 		setCreateListFormLoading(true);
-		const result = await createList({ userId: user.id, ...values });
+		const result = await createList(values);
 		setCreateListFormLoading(false);
 		setCreateListDialogOpen(false);
 		createListForm.reset();

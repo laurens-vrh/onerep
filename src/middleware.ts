@@ -1,7 +1,6 @@
-import { auth } from "@/lib/auth";
 import { Role } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(request: NextRequest) {
 	const path = request.nextUrl.pathname;
@@ -17,7 +16,7 @@ export default async function middleware(request: NextRequest) {
 	if (path === "/") {
 		if (session && request.nextUrl.searchParams.get("landing") !== "true")
 			return NextResponse.redirect(
-				process.env.NEXT_PUBLIC_BASE_URL + "/signin"
+				process.env.NEXT_PUBLIC_BASE_URL + "/auth/signin"
 			);
 		else return NextResponse.next();
 	}
@@ -26,11 +25,11 @@ export default async function middleware(request: NextRequest) {
 		if (request.nextUrl.pathname.startsWith("/app"))
 			return NextResponse.redirect(
 				process.env.NEXT_PUBLIC_BASE_URL +
-					"/signin?redirectTo=" +
+					"/auth/signin?redirectTo=" +
 					request.nextUrl.pathname +
 					request.nextUrl.search
 			);
-		else if (request.nextUrl.pathname === "/signin") {
+		else if (request.nextUrl.pathname === "/auth/signin") {
 			return NextResponse.next();
 		} else return NextResponse.next();
 	}
@@ -42,7 +41,7 @@ export default async function middleware(request: NextRequest) {
 	)
 		return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL + "/app");
 
-	if (request.nextUrl.pathname === "/signin")
+	if (request.nextUrl.pathname === "/auth/signin")
 		return NextResponse.redirect(
 			process.env.NEXT_PUBLIC_BASE_URL +
 				(request.nextUrl.searchParams.get("redirectTo") ?? "/app")
