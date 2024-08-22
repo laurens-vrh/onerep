@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { compare } from "bcryptjs";
 import NextAuth, { CredentialsSignin, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Discord from "next-auth/providers/discord";
@@ -6,8 +7,7 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Twitch from "next-auth/providers/twitch";
 import { prisma } from "./database/prisma";
-import { SignInData, signInSchema } from "./schemas";
-import { compare } from "bcryptjs";
+import { SignInData, signInSchema } from "./lib/schemas";
 
 function credentialsError(code: string) {
 	const error = new CredentialsSignin();

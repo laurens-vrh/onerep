@@ -1,4 +1,4 @@
-import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import { getCurrentUser, getUserProfile } from "@/database/User";
 import { redirect } from "next/navigation";
 import { SearchResults } from "./SearchResults";
 import { Heading } from "@/components/Heading";

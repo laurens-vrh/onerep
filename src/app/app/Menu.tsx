@@ -33,10 +33,10 @@ import {
 	MenubarTrigger,
 } from "@/components/ui/menubar";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { createList } from "@/lib/actions/list";
-import { deleteAccount } from "@/lib/actions/user";
+import { createList } from "@/actions/list";
+import { deleteAccount } from "@/actions/user";
 import { signOut as authSignOut, signOut } from "next-auth/react";
-import { PrivateUser, UserProfile } from "@/lib/database/User";
+import { PrivateUser, UserProfile } from "@/database/User";
 import { listFormSchema, ListFormSchemaData } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";

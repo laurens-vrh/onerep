@@ -6,7 +6,7 @@ import {
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { PrivateUser, UserProfile } from "@/lib/database/User";
+import { PrivateUser, UserProfile } from "@/database/User";
 import { ReactNode, useState } from "react";
 import { Menu } from "./Menu";
 import { Sidebar } from "./Sidebar";

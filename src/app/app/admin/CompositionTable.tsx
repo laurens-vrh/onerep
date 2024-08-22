@@ -7,10 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-	approveComposition,
-	deleteComposition,
-} from "@/lib/actions/composition";
+import { approveComposition, deleteComposition } from "@/actions/composition";
 import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import {

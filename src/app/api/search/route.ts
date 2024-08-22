@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/database/prisma";
+import { prisma } from "@/database/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { SearchResults } from "./SearchResults";
-import { auth } from "@/lib/auth";
+import { auth } from "@/auth";
 
 export async function GET(
 	request: NextRequest

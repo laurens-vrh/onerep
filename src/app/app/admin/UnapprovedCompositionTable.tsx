@@ -1,11 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-	approveComposition,
-	approveCompositions,
-} from "@/lib/actions/composition";
-import { getCompositions } from "@/lib/database/admin";
+import { approveComposition, approveCompositions } from "@/actions/composition";
+import { getCompositions } from "@/database/admin";
 import { ArrayElement } from "@/lib/types/utilities";
 import { dataTableSelectColumn } from "@/lib/utils";
 import { Composer, Composition } from "@prisma/client";

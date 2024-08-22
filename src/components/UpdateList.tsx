@@ -1,5 +1,5 @@
-import { Update } from "@/lib/database/Update";
-import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import { Update } from "@/database/Update";
+import { getCurrentUser, getUserProfile } from "@/database/User";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Link from "next/link";

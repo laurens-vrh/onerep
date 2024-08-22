@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-
+import { saveComposition } from "@/actions/composition";
 import { SaveCompositionAlertDialog } from "@/components/dialogs/SaveCompositionAlertDialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,17 +11,18 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { saveComposition } from "@/lib/actions/composition";
+import { cn } from "@/lib/utils";
 import { Composition, List } from "@prisma/client";
 import { CircleX, ListCheck, ListPlus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { ReactNode, useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "../Icons";
-import { cn } from "@/lib/utils";
 
 export function SaveCompositionButton({
 	user,
 	composition,
+	button,
 	small,
 }: {
 	user: {
@@ -31,18 +31,18 @@ export function SaveCompositionButton({
 		})[];
 	};
 	composition: Pick<Composition, "id" | "name">;
+	button?: ReactNode;
 	small?: boolean;
 }) {
 	const pathname = usePathname();
 	const router = useRouter();
 
-	const [isLoading, setIsLoading] = React.useState(false);
-	const [open, setOpen] = React.useState(false);
-	const [dialogOpen, setDialogOpen] = React.useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const [currentList, setCurrentList] =
-		React.useState<Pick<List, "id" | "name">>();
-	const [listsSavedIn, setListsSavedIn] = React.useState(
+	const [currentList, setCurrentList] = useState<Pick<List, "id" | "name">>();
+	const [listsSavedIn, setListsSavedIn] = useState(
 		user.lists
 			.filter((l) =>
 				l.compositions.find((c) => c.composition.id === composition.id)
@@ -85,25 +85,27 @@ export function SaveCompositionButton({
 			/>
 
 			<DropdownMenuTrigger asChild>
-				<Button
-					className={cn(
-						"outline-none select-none cursor-pointer",
-						small && "aspect-square p-0"
-					)}
-					variant={saved ? "secondary" : "default"}
-				>
-					{saved ? (
-						<>
-							<ListCheck className={cn("h-4 w-4", !small && "mr-2")} />
-							{!small && " Saved"}
-						</>
-					) : (
-						<>
-							<ListPlus className={cn("h-4 w-4", !small && "mr-2")} />
-							{!small && " Save"}
-						</>
-					)}
-				</Button>
+				{button ?? (
+					<Button
+						className={cn(
+							"outline-none select-none cursor-pointer",
+							small && "aspect-square p-0"
+						)}
+						variant={saved ? "secondary" : "default"}
+					>
+						{saved ? (
+							<>
+								<ListCheck className={cn("h-4 w-4", !small && "mr-2")} />
+								{!small && " Saved"}
+							</>
+						) : (
+							<>
+								<ListPlus className={cn("h-4 w-4", !small && "mr-2")} />
+								{!small && " Save"}
+							</>
+						)}
+					</Button>
+				)}
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
 				<DropdownMenuLabel>Add to list</DropdownMenuLabel>

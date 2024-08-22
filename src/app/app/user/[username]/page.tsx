@@ -12,12 +12,12 @@ import { SeparatorDot } from "@/components/SeparatorDot";
 import { TextLink } from "@/components/TextLink";
 import { Badge } from "@/components/ui/badge";
 import { UpdateList } from "@/components/UpdateList";
-import { prisma } from "@/lib/database/prisma";
+import { prisma } from "@/database/prisma";
 import {
 	getCurrentUser,
 	getUserProfile,
 	getUserProfileByUsername,
-} from "@/lib/database/User";
+} from "@/database/User";
 import { Composer, Role } from "@prisma/client";
 import { format } from "date-fns";
 import { Shield, User } from "lucide-react";

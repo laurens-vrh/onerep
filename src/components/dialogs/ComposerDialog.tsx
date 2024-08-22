@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { addComposer, updateComposer } from "@/lib/actions/composer";
+import { addComposer, updateComposer } from "@/actions/composer";
 import { readableUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, CircleX } from "lucide-react";

@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { addComposition, updateComposition } from "@/lib/actions/composition";
+import { addComposition, updateComposition } from "@/actions/composition";
 import { CompositionFormData, compositionFormSchema } from "@/lib/schemas";
 import { readableUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";

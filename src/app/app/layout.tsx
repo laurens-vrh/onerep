@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster } from "@/components/ui/sonner";
-import { auth } from "@/lib/auth";
-import { getUserProfile } from "@/lib/database/User";
+import { auth } from "@/auth";
+import { getUserProfile } from "@/database/User";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { redirect } from "next/navigation";
 import { AppLayout } from "./AppLayout";

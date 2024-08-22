@@ -4,8 +4,8 @@ import { ListCard } from "@/components/cards/ListCard";
 import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { UpdateList } from "@/components/UpdateList";
-import { getHomeData, getUpdates } from "@/lib/database/Update";
-import { getCurrentUser, getUserProfile } from "@/lib/database/User";
+import { getHomeData, getUpdates } from "@/database/Update";
+import { getCurrentUser, getUserProfile } from "@/database/User";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 

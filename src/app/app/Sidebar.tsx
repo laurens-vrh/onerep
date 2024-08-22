@@ -5,7 +5,7 @@ import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { UserProfile } from "@/lib/database/User";
+import { UserProfile } from "@/database/User";
 import { List, Role } from "@prisma/client";
 import {
 	CircleUser,

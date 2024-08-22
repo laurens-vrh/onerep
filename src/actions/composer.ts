@@ -1,15 +1,15 @@
 "use server";
 
 import { Composer, Prisma, Role, UpdateType } from "@prisma/client";
-import { auth } from "../auth";
-import { prisma } from "../database/prisma";
-import { createUpdate } from "../database/Update";
-import { ComposerFormData, composerFormSchema } from "../schemas";
+import { auth } from "@/auth";
+import { prisma } from "@/database/prisma";
+import { createUpdate } from "@/database/Update";
+import { ComposerFormData, composerFormSchema } from "@/lib/schemas";
 import {
 	AddComposerFormResponse,
 	ApproveComposerResponse,
 	ToastResponse,
-} from "../types/responses";
+} from "@/lib/types/responses";
 
 export async function addComposer(
 	data: ComposerFormData

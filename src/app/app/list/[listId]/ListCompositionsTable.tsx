@@ -17,9 +17,9 @@ import {
 	saveComposition,
 	updatePosition,
 	updateUserCompositionData,
-} from "@/lib/actions/composition";
-import { ListProfile } from "@/lib/database/List";
-import { UserProfile } from "@/lib/database/User";
+} from "@/actions/composition";
+import { ListProfile } from "@/database/List";
+import { UserProfile } from "@/database/User";
 import { ArrayElement } from "@/lib/types/utilities";
 import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
 import { ColumnDef, Row, Table } from "@tanstack/react-table";

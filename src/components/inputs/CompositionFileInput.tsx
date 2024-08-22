@@ -17,7 +17,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { deleteFile, getFile, uploadFile } from "@/lib/actions/file";
+import { deleteFile, getFile, uploadFile } from "@/actions/file";
 import { capitalizeFirst } from "@/lib/utils";
 import { File, FileType } from "@prisma/client";
 import { CircleCheck, CircleX, Download, Trash2 } from "lucide-react";

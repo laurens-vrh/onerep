@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { generalSave } from "@/lib/actions/composer";
+import { generalSave } from "@/actions/composer";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 

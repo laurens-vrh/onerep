@@ -1,10 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { prisma } from "../database/prisma";
-import { getCurrentUser } from "../database/User";
-import { storageBucket } from "../firebase";
-import { SignUpData, signUpSchema } from "../schemas";
+import { prisma } from "@/database/prisma";
+import { getCurrentUser } from "@/database/User";
+import { storageBucket } from "@/firebase";
+import { SignUpData, signUpSchema } from "@/lib/schemas";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { hash } from "bcryptjs";
 

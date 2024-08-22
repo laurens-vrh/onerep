@@ -1,10 +1,10 @@
 "use server";
 
 import { List, Prisma } from "@prisma/client";
-import { auth } from "../auth";
-import { createUpdate } from "../database/Update";
-import { prisma } from "../database/prisma";
-import { listFormSchema } from "../schemas";
+import { auth } from "@/auth";
+import { createUpdate } from "@/database/Update";
+import { prisma } from "@/database/prisma";
+import { listFormSchema } from "@/lib/schemas";
 
 export async function createList(data: {
 	name: string;

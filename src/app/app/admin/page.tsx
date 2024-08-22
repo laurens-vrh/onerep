@@ -1,10 +1,6 @@
 import { DataTable } from "@/components/DataTable";
 import { Heading } from "@/components/Heading";
-import {
-	getComposers,
-	getCompositions,
-	getStatistics,
-} from "@/lib/database/admin";
+import { getComposers, getCompositions, getStatistics } from "@/database/admin";
 import { composerColumns } from "./ComposerTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";

@@ -8,7 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { updateList } from "@/lib/actions/list";
+import { updateList } from "@/actions/list";
 import { ListFormSchemaData, listFormSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { List } from "@prisma/client";

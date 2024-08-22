@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { approveComposer, approveComposers } from "@/lib/actions/composer";
+import { approveComposer, approveComposers } from "@/actions/composer";
 import { dataTableSelectColumn } from "@/lib/utils";
 import { Composer } from "@prisma/client";
 import { ColumnDef, Table } from "@tanstack/react-table";

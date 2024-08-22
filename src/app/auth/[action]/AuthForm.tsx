@@ -11,7 +11,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/actions/user";
+import { signUp } from "@/actions/user";
 import {
 	SignInData,
 	signInSchema,

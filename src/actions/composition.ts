@@ -1,5 +1,17 @@
 "use server";
 
+import { auth } from "@/auth";
+import { getList } from "@/database/List";
+import { prisma } from "@/database/prisma";
+import { createUpdate } from "@/database/Update";
+import { getUserProfile } from "@/database/User";
+import { storageBucket } from "@/firebase";
+import { CompositionFormData, compositionFormSchema } from "@/lib/schemas";
+import {
+	ApproveCompositionResponse,
+	CompositionFormResponse,
+	ToastResponse,
+} from "@/lib/types/responses";
 import {
 	Composer,
 	Composition,
@@ -9,22 +21,6 @@ import {
 	UpdateType,
 	UserCompositionData,
 } from "@prisma/client";
-import { auth } from "../auth";
-import { getList } from "../database/List";
-import { prisma } from "../database/prisma";
-import { createUpdate } from "../database/Update";
-import { getUserProfile } from "../database/User";
-import { storageBucket } from "../firebase";
-import {
-	composerFormSchema,
-	CompositionFormData,
-	compositionFormSchema,
-} from "../schemas";
-import {
-	ApproveCompositionResponse,
-	CompositionFormResponse,
-	ToastResponse,
-} from "../types/responses";
 
 export async function addComposition(
 	data: CompositionFormData
