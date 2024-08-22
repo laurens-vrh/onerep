@@ -69,6 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			},
 		}),
 		Twitch({
+			allowDangerousEmailAccountLinking: true,
 			authorization: {
 				params: {
 					claims: {
