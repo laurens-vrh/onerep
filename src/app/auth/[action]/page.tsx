@@ -64,6 +64,17 @@ export default function AuthPage({ params }: { params: { action: string } }) {
 					<AuthForm type={action} callbackUrl={callbackUrl} />
 					<AuthSeparator />
 					<AuthButtons callbackUrl={callbackUrl} />
+					<p className="px-8 text-center text-sm text-muted-foreground">
+						By clicking to continue, you agree to our{" "}
+						<TextLink href="/documents/terms_of_service.html">
+							Terms of Service
+						</TextLink>{" "}
+						and{" "}
+						<TextLink href="/documents/privacy_policy.html">
+							Privacy Policy
+						</TextLink>
+						.
+					</p>
 				</div>
 			</div>
 		</div>
