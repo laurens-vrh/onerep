@@ -20,6 +20,7 @@ import { TextLink } from "@/components/TextLink";
 import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { Button } from "@/components/ui/button";
 import { Role } from "@prisma/client";
+import { Fragment } from "react";
 
 export default async function Page({
 	params,
@@ -50,13 +51,12 @@ export default async function Page({
 					<>
 						By{" "}
 						{composition.composers.map((composer, i) => (
-							<TextLink
-								key={composer.id}
-								href={readableUrl("composer", composer)}
-							>
-								{composer.name}
+							<Fragment key={composer.id}>
+								<TextLink href={readableUrl("composer", composer)}>
+									{composer.name}
+								</TextLink>
 								{composition.composers.length === i + 1 ? "" : ", "}
-							</TextLink>
+							</Fragment>
 						))}
 						<SeparatorDot />
 						{composition._count.users} saves
