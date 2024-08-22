@@ -70,18 +70,7 @@ export function CompositionCard({
 						<SaveCompositionButton
 							composition={composition}
 							user={user}
-							button={
-								<Button
-									variant={saved ? "secondary" : "default"}
-									className="cursor-pointer aspect-square p-2"
-								>
-									{saved ? (
-										<ListCheck className="w-4 h-4" />
-									) : (
-										<ListPlus className="w-4 h-4" />
-									)}
-								</Button>
-							}
+							small={true}
 						/>
 					)}
 				</div>

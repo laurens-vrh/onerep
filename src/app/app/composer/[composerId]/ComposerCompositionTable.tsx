@@ -87,12 +87,13 @@ export const composerCompositionTableColumns: (
 	},
 	{
 		id: "actions",
-		size: 100,
+		size: 80,
 		enableResizing: false,
 		cell: ({ row }: { row: Row<ComposerComposition> }) => (
 			<SaveCompositionButton
 				composition={row.original}
 				user={currentUserProfile}
+				small={true}
 			/>
 		),
 	},

@@ -18,11 +18,12 @@ import { CircleX, ListCheck, ListPlus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Icons } from "../Icons";
+import { cn } from "@/lib/utils";
 
 export function SaveCompositionButton({
 	user,
 	composition,
-	button,
+	small,
 }: {
 	user: {
 		lists: (Pick<List, "id" | "name" | "icon"> & {
@@ -30,7 +31,7 @@ export function SaveCompositionButton({
 		})[];
 	};
 	composition: Pick<Composition, "id" | "name">;
-	button?: React.ReactNode;
+	small?: boolean;
 }) {
 	const pathname = usePathname();
 	const router = useRouter();
@@ -84,22 +85,25 @@ export function SaveCompositionButton({
 			/>
 
 			<DropdownMenuTrigger asChild>
-				{button ?? (
-					<Button
-						className="outline-none select-none cursor-pointer"
-						variant={saved ? "secondary" : "default"}
-					>
-						{saved ? (
-							<>
-								<ListCheck className="mr-2 h-4 w-4" /> Saved
-							</>
-						) : (
-							<>
-								<ListPlus className="mr-2 h-4 w-4" /> Save
-							</>
-						)}
-					</Button>
-				)}
+				<Button
+					className={cn(
+						"outline-none select-none cursor-pointer",
+						small && "aspect-square p-0"
+					)}
+					variant={saved ? "secondary" : "default"}
+				>
+					{saved ? (
+						<>
+							<ListCheck className={cn("h-4 w-4", !small && "mr-2")} />
+							{!small && " Saved"}
+						</>
+					) : (
+						<>
+							<ListPlus className={cn("h-4 w-4", !small && "mr-2")} />
+							{!small && " Save"}
+						</>
+					)}
+				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
 				<DropdownMenuLabel>Add to list</DropdownMenuLabel>
