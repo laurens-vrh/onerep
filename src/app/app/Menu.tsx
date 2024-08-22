@@ -240,11 +240,23 @@ export function Menu({
 						OneRep
 					</MenubarTrigger>
 					<MenubarContent>
+						<MenubarItem>
+							<Link href="/?landing=true">Landing Page</Link>
+						</MenubarItem>
 						<MenubarItem onClick={() => setAboutDialogOpen(true)}>
 							About OneRep
 						</MenubarItem>
 						<MenubarItem>
 							<Link href="/?landing=true">Landing Page</Link>
+						</MenubarItem>
+						<MenubarSeparator />
+						<MenubarItem>
+							<Link href="/documents/terms_of_service.html">
+								Terms of Service
+							</Link>
+						</MenubarItem>
+						<MenubarItem>
+							<Link href="/documents/privacy_policy.html">Privacy Policy</Link>
 						</MenubarItem>
 					</MenubarContent>
 				</MenubarMenu>

@@ -6,8 +6,24 @@ export function LandingFooter() {
 			<Separator />
 
 			<section className="container py-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-12 gap-y-8">
-				<div className="flex flex-col gap-2">
+				<div className="flex flex-col gap-2 text-sm">
 					<p className="font-bold text-xl">OneRep</p>
+					<a
+						target="_blank"
+						rel="noreferrer noopener"
+						href="/documents/terms_of_service.html"
+						className="opacity-60 hover:opacity-100"
+					>
+						Terms of Service
+					</a>
+					<a
+						target="_blank"
+						rel="noreferrer noopener"
+						href="/documents/privacy_policy.html"
+						className="opacity-60 hover:opacity-100"
+					>
+						Privacy Policy
+					</a>
 					<a
 						target="_blank"
 						rel="noreferrer noopener"
