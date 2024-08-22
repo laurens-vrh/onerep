@@ -2,7 +2,6 @@
 
 import { FileType, Prisma } from "@prisma/client";
 import { getDownloadURL } from "firebase-admin/storage";
-import { NextResponse } from "next/server";
 import { auth } from "../auth";
 import { prisma } from "../database/prisma";
 import { getUserProfile } from "../database/User";
@@ -53,6 +52,9 @@ export async function uploadFile({
 		action: "write",
 		expires: Date.now() + 15 * 60 * 1000,
 		contentType: type,
+		extensionHeaders: {
+			"x-goog-content-length-range": "0," + 5 * 2 ** 20,
+		},
 	});
 
 	return {
