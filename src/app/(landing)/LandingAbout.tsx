@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 
 export function LandingAbout() {
 	return (
-		<section id="about" className="container py-24 sm:py-32">
-			<div className="bg-muted/50 border rounded-lg py-12">
+		<section
+			id="about"
+			className="container my-24 sm:my-32 relative bg-background"
+		>
+			<div className="bg-muted/50 border rounded-lg py-12 shadow-lg">
 				<div className="px-6 md:px-16 flex flex-col md:flex-row md:justify-between justify-start gap-8">
 					<div className="max-w-[80ch] flex-shrink">
 						<h2 className="text-3xl md:text-4xl font-bold">
