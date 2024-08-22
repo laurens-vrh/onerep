@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { TableComposition } from "./UnapprovedCompositionTable";
+import { TextLink } from "@/components/TextLink";
 
 export const compositionColumns: ColumnDef<TableComposition>[] = [
 	dataTableSelectColumn<TableComposition>(),
@@ -73,9 +74,9 @@ export const compositionColumns: ColumnDef<TableComposition>[] = [
 			);
 		},
 		cell: ({ row }) => (
-			<Link prefetch={false} href={readableUrl("composition", row.original)}>
+			<TextLink href={readableUrl("composition", row.original)} hidden={true}>
 				{row.original.name}
-			</Link>
+			</TextLink>
 		),
 	},
 	{

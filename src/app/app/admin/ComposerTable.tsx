@@ -24,6 +24,7 @@ import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 import { TableComposer } from "./UnapprovedComposerTable";
+import { TextLink } from "@/components/TextLink";
 
 type TableMeta = {
 	data: TableComposer[];
@@ -75,9 +76,9 @@ export const composerColumns: ColumnDef<TableComposer>[] = [
 			);
 		},
 		cell: ({ row }) => (
-			<Link prefetch={false} href={readableUrl("composer", row.original)}>
+			<TextLink href={readableUrl("composer", row.original)} hidden={true}>
 				{row.original.name}
-			</Link>
+			</TextLink>
 		),
 	},
 	{

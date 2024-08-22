@@ -161,17 +161,16 @@ export function Menu({
 								openly available on Github. Please report any bugs you find and
 								share ideas you may have to improve the site!
 							</p>
-							<Link
-								href="https://github.com/laurens-vrh/onerep"
-								target="_blank"
-								rel="noopener noreferrer"
-								autoFocus={false}
-							>
-								<Button variant="outline">
+							<Button variant="outline" asChild>
+								<a
+									href="https://github.com/laurens-vrh/onerep"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<Icons.github className="w-4 h-4 mr-2" />
 									Github
-								</Button>
-							</Link>
+								</a>
+							</Button>
 						</DialogDescription>
 					</DialogHeader>
 				</DialogContent>
@@ -245,9 +244,6 @@ export function Menu({
 						</MenubarItem>
 						<MenubarItem onClick={() => setAboutDialogOpen(true)}>
 							About OneRep
-						</MenubarItem>
-						<MenubarItem>
-							<Link href="/?landing=true">Landing Page</Link>
 						</MenubarItem>
 						<MenubarSeparator />
 						<MenubarItem>

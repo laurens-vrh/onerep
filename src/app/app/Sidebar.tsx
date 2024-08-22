@@ -58,18 +58,16 @@ export function Sidebar({
 					pathname === url ? "bg-secondary" : ""
 				} hover:bg-secondary`}
 			>
-				<Link href={url} className="flex-1">
-					<Button
-						variant="ghost"
-						className="justify-start hover:bg-transparent pr-0"
-						asChild
-					>
-						<div>
-							<Icon className="mr-2 h-4 w-4" />
-							{list.name}
-						</div>
-					</Button>
-				</Link>
+				<Button
+					variant="ghost"
+					className="justify-start hover:bg-transparent pr-0"
+					asChild
+				>
+					<Link href={url} className="flex-1">
+						<Icon className="mr-2 h-4 w-4" />
+						{list.name}
+					</Link>
+				</Button>
 				{editable && (
 					<EditListButton
 						list={list}
@@ -85,14 +83,15 @@ export function Sidebar({
 	function userLink(username: string) {
 		const url = "/app/user/" + username;
 		return (
-			<Link key={username} href={url}>
-				<Button
-					variant={pathname === url ? "secondary" : "ghost"}
-					className="w-full justify-start"
-				>
+			<Button
+				variant={pathname === url ? "secondary" : "ghost"}
+				className="w-full justify-start"
+				asChild
+			>
+				<Link key={username} href={url}>
 					<UserIcon className="mr-2 h-4 w-4" />@{username}
-				</Button>
-			</Link>
+				</Link>
+			</Button>
 		);
 	}
 
@@ -104,26 +103,28 @@ export function Sidebar({
 						<MainSearch user={user} full={true} />
 					</div>
 				)}
-				<Link href="/app">
-					<Button
-						variant={pathname === "/app" ? "secondary" : "ghost"}
-						className="w-full justify-start"
-					>
+				<Button
+					variant={pathname === "/app" ? "secondary" : "ghost"}
+					className="w-full justify-start"
+					asChild
+				>
+					<Link href="/app">
 						<LayoutPanelTop className="mr-2 h-4 w-4" />
 						Home
-					</Button>
-				</Link>
-				<Link href={"/app/user/" + user.username}>
-					<Button
-						variant={
-							pathname === "/app/user/" + user.username ? "secondary" : "ghost"
-						}
-						className="w-full justify-start"
-					>
+					</Link>
+				</Button>
+				<Button
+					variant={
+						pathname === "/app/user/" + user.username ? "secondary" : "ghost"
+					}
+					className="w-full justify-start"
+					asChild
+				>
+					<Link href={"/app/user/" + user.username}>
 						<CircleUser className="mr-2 h-4 w-4" />
 						Profile
-					</Button>
-				</Link>
+					</Link>
+				</Button>
 
 				<p className="mt-4 px-4 text-lg font-semibold tracking-tight">
 					Library
@@ -142,15 +143,16 @@ export function Sidebar({
 					{user.savedComposers.map((composer) => {
 						const url = `/app/composer/${composer.id}`;
 						return (
-							<Link key={composer.id} href={url}>
-								<Button
-									variant={pathname === url ? "secondary" : "ghost"}
-									className="w-full justify-start"
-								>
+							<Button
+								variant={pathname === url ? "secondary" : "ghost"}
+								className="w-full justify-start"
+								asChild
+							>
+								<Link key={composer.id} href={url}>
 									<Icons.composer className="mr-2 h-4 w-4" />
 									{composer.name}
-								</Button>
-							</Link>
+								</Link>
+							</Button>
 						);
 					})}
 				</div>
@@ -170,15 +172,16 @@ export function Sidebar({
 				)}
 
 				{user.role === Role.ADMIN && (
-					<Link href="/app/admin">
-						<Button
-							variant="outline"
-							className="absolute bottom-2 w-[calc(100%-2*12px)] justify-start"
-						>
+					<Button
+						variant="outline"
+						className="absolute bottom-2 w-[calc(100%-2*12px)] justify-start"
+						asChild
+					>
+						<Link href="/app/admin">
 							<LockKeyholeOpen className="mr-2 h-4 w-4" />
 							Admin Dashboard
-						</Button>
-					</Link>
+						</Link>
+					</Button>
 				)}
 			</ScrollArea>
 		</>

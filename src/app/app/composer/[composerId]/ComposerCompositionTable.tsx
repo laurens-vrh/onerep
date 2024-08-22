@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
+import { TextLink } from "@/components/TextLink";
 import { SaveCompositionButton } from "@/components/buttons/SaveCompositionButton";
 import { Button } from "@/components/ui/button";
 import { ComposerProfile } from "@/lib/database/Composer";
@@ -58,12 +59,9 @@ export const composerCompositionTableColumns: (
 			);
 		},
 		cell: ({ row }) => (
-			<Link
-				href={readableUrl("composition", row.original)}
-				className="hover:underline"
-			>
+			<TextLink href={readableUrl("composition", row.original)} hidden={true}>
 				{row.original.name}
-			</Link>
+			</TextLink>
 		),
 	},
 	{

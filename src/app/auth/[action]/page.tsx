@@ -7,6 +7,7 @@ import { AuthForm } from "./AuthForm";
 import { AuthSeparator } from "./AuthSeparator";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { TextLink } from "@/components/TextLink";
 
 export default function AuthPage({ params }: { params: { action: string } }) {
 	const isSignIn = params.action === "signin";
@@ -15,6 +16,9 @@ export default function AuthPage({ params }: { params: { action: string } }) {
 	const searchParams = useSearchParams();
 	const error = searchParams.get("code");
 	const callbackUrl = searchParams.get("redirectTo") ?? "/app";
+	const otherActionUrl = `/auth/${
+		isSignIn ? "signup" : "signin"
+	}?redirectTo=${encodeURIComponent(callbackUrl)}`;
 
 	return (
 		<div className="container relative h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -40,28 +44,12 @@ export default function AuthPage({ params }: { params: { action: string } }) {
 								{isSignIn ? (
 									<>
 										Not yet a member?{" "}
-										<Link
-											className="hover:underline"
-											href={
-												"/auth/signup?redirectTo=" +
-												encodeURIComponent(callbackUrl)
-											}
-										>
-											Sign up
-										</Link>
+										<TextLink href={otherActionUrl}>Sign up</TextLink>
 									</>
 								) : (
 									<>
 										Already a member?{" "}
-										<Link
-											className="hover:underline"
-											href={
-												"/auth/signin?redirectTo=" +
-												encodeURIComponent(callbackUrl)
-											}
-										>
-											Sign in
-										</Link>
+										<TextLink href={otherActionUrl}>Sign in</TextLink>
 									</>
 								)}
 							</p>

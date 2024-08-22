@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { emptySearchResults, SearchResults } from "../api/search/SearchResults";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { TextLink } from "@/components/TextLink";
 
 export function MainSearch({
 	user,
@@ -103,13 +104,13 @@ export function MainSearch({
 								>
 									{noResults && <p>No results found.</p>}
 									{!noResults && (
-										<Link
+										<TextLink
 											href={"/app/search/" + search}
 											className="flex items-center w-fit mx-auto"
 										>
 											View full results
 											<ArrowRight className="w-4 h-4 ml-1" />
-										</Link>
+										</TextLink>
 									)}
 									{noCompositionOrComposerResults && (
 										<>
@@ -118,7 +119,7 @@ export function MainSearch({
 												open={addCompositionDialogOpen}
 												setOpen={setAddCompositionDialogOpen}
 												trigger={
-													<button className="underline cursor-pointer">
+													<button className="underline underline-offset-4 hover:text-primary cursor-pointer">
 														composition
 													</button>
 												}
@@ -128,7 +129,7 @@ export function MainSearch({
 												open={addComposerDialogOpen}
 												setOpen={setAddComposerDialogOpen}
 												trigger={
-													<button className="underline cursor-pointer">
+													<button className="underline underline-offset-4 hover:text-primary cursor-pointer">
 														composer
 													</button>
 												}

@@ -16,6 +16,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { UserCompositionData } from "./UserCompositionData";
 import { readableUrl } from "@/lib/utils";
+import { TextLink } from "@/components/TextLink";
 
 export default async function Page({
 	params,
@@ -46,14 +47,13 @@ export default async function Page({
 					<>
 						By{" "}
 						{composition.composers.map((composer, i) => (
-							<Link
+							<TextLink
 								key={composer.id}
 								href={readableUrl("composer", composer)}
-								className="hover:underline"
 							>
 								{composer.name}
 								{composition.composers.length === i + 1 ? "" : ", "}
-							</Link>
+							</TextLink>
 						))}
 						<SeparatorDot />
 						{composition._count.users} saves

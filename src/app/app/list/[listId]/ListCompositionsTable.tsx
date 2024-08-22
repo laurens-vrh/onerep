@@ -5,6 +5,7 @@ import { DataTable } from "@/components/DataTable";
 import { DateDisplay } from "@/components/DateDisplay";
 import { SaveCompositionAlertDialog } from "@/components/dialogs/SaveCompositionAlertDialog";
 import { DatePicker } from "@/components/inputs/DatePicker";
+import { TextLink } from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -162,23 +163,25 @@ export const listCompositionTableColumns: (
 		},
 		cell: ({ row }) => (
 			<>
-				<Link
+				<TextLink
 					href={readableUrl("composition", row.original.composition)}
-					className="hover:underline font-semibold"
+					className="font-semibold"
+					hidden={true}
 				>
-					<span className="w-full">{row.original.composition.name}</span>
-				</Link>
+					{row.original.composition.name}
+				</TextLink>
 				<p className="text-sm">
 					By{" "}
 					{row.original.composition.composers.map((composer, i) => (
-						<Link
+						<TextLink
 							key={composer.id}
 							href={readableUrl("composer", composer)}
-							className=" hover:underline relative z-10"
+							hidden={true}
+							className="relative z-10"
 						>
 							{composer.name}
 							{i + 1 === row.original.composition.composers.length ? "" : ", "}
-						</Link>
+						</TextLink>
 					))}
 				</p>
 			</>

@@ -7,6 +7,7 @@ import { ComposerCard } from "./cards/ComposerCard";
 import { CompositionCard } from "./cards/CompositionCard";
 import { ListCard } from "./cards/ListCard";
 import { UserCard } from "./cards/UserCard";
+import { TextLink } from "./TextLink";
 
 export async function UpdateList({
 	updates,
@@ -38,12 +39,13 @@ export async function UpdateList({
 				)}
 			</p>
 			<p className="mb-2">
-				<Link
+				<TextLink
 					href={"/app/user/" + update.user.id}
-					className="hover:underline font-semibold"
+					className="font-semibold"
+					hidden={true}
 				>
 					@{update.user.username}
-				</Link>
+				</TextLink>
 				{
 					{
 						FAVORITE: ` added ${update.relatedComposition?.name} to their favorites!`,

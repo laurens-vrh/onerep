@@ -9,6 +9,7 @@ import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
+import { TextLink } from "@/components/TextLink";
 import { Badge } from "@/components/ui/badge";
 import { UpdateList } from "@/components/UpdateList";
 import { prisma } from "@/lib/database/prisma";
@@ -102,12 +103,9 @@ export default async function Page({
 					{favoritesList && favoritesList.compositions.length > 0 && (
 						<GridCard
 							title={
-								<Link
-									className="hover:underline"
-									href={"/app/list/" + favoritesList.id}
-								>
+								<TextLink href={"/app/list/" + favoritesList.id}>
 									Favorite Compositions
-								</Link>
+								</TextLink>
 							}
 							forceSingle={true}
 						>

@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ListCompositionsTable } from "./ListCompositionsTable";
+import { TextLink } from "@/components/TextLink";
 
 export default async function Page({ params }: { params: { listId: string } }) {
 	const { id } = (await getCurrentUser())!;
@@ -48,12 +49,9 @@ export default async function Page({ params }: { params: { listId: string } }) {
 				composer={
 					<>
 						By{" "}
-						<Link
-							href={`/app/user/${list.user.username}`}
-							className="hover:underline"
-						>
+						<TextLink href={`/app/user/${list.user.username}`}>
 							@{list.user.username}
-						</Link>
+						</TextLink>
 						{list.custom && (
 							<>
 								<SeparatorDot />
