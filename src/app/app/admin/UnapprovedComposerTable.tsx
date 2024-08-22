@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { approveComposer, approveComposers } from "@/actions/composer";
-import { dataTableSelectColumn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { dataTableSelectColumn, error, success } from "@/lib/utils";
 import { Composer } from "@prisma/client";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import {
@@ -12,12 +12,9 @@ import {
 	ArrowUpAZ,
 	ArrowUpDown,
 	Check,
-	CircleCheck,
-	CircleX,
 	X,
 } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-import { toast } from "sonner";
 
 export type TableComposer = Pick<Composer, "id" | "name" | "approved"> & {
 	_count: { compositions: number; savedBy: number };
@@ -34,20 +31,20 @@ async function approve(
 ) {
 	const result = await approveComposer(composer.id, approved);
 	if (!result.success)
-		return toast(
+		return error(
 			`Error ${approved ? "" : "dis"}approving composer ${composer.name}`,
-			{
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			}
+			result.error
 		);
-	toast(`${approved ? "A" : "Disa"}pproved composer ${composer.name}`, {
-		action: {
-			label: "Undo",
-			onClick: () => approveComposer(composer.id, null),
-		},
-		icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-	});
+	success(
+		`${approved ? "A" : "Disa"}pproved composer ${composer.name}`,
+		undefined,
+		{
+			action: {
+				label: "Undo",
+				onClick: () => approveComposer(composer.id, null),
+			},
+		}
+	);
 
 	if (table.options.meta) {
 		const meta = table.options.meta as TableMeta;
@@ -64,20 +61,20 @@ async function approveMany(
 
 	const result = await approveComposers(composerIds, approved);
 	if (!result.success)
-		return toast(
+		return error(
 			`Error ${approved ? "" : "dis"}approving ${composers.length} composers`,
-			{
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			}
+			result.error
 		);
-	toast(`${approved ? "A" : "Disa"}pproved ${composers.length} composers`, {
-		action: {
-			label: "Undo",
-			onClick: () => approveComposers(composerIds, null),
-		},
-		icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-	});
+	success(
+		`${approved ? "A" : "Disa"}pproved ${composers.length} composers`,
+		undefined,
+		{
+			action: {
+				label: "Undo",
+				onClick: () => approveComposers(composerIds, null),
+			},
+		}
+	);
 
 	if (table.options.meta) {
 		const meta = table.options.meta as {

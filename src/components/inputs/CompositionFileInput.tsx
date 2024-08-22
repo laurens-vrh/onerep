@@ -1,3 +1,4 @@
+import { deleteFile, getFile, uploadFile } from "@/actions/file";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,13 +18,11 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { deleteFile, getFile, uploadFile } from "@/actions/file";
-import { capitalizeFirst } from "@/lib/utils";
+import { capitalizeFirst, error, success } from "@/lib/utils";
 import { File, FileType } from "@prisma/client";
-import { CircleCheck, CircleX, Download, Trash2 } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export function CompositionFileInput({
 	compositionId,
@@ -96,9 +95,7 @@ export function CompositionFileInput({
 				const inputFile = e.target.files?.[0];
 				if (!inputFile) return;
 				if (inputFile.size > 5 * 2 ** 20)
-					return toast("File size cannot exceed 5 MB", {
-						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-					});
+					return error("File size cannot exceed 5 MB");
 
 				try {
 					const result = await uploadFile({
@@ -127,15 +124,13 @@ export function CompositionFileInput({
 					});
 					if (!fileReponse?.success) throw fileReponse?.error;
 
-					toast(`${capitalizeFirst(formattedType)} uploaded!`, {
-						icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-					});
+					success(
+						`${capitalizeFirst(formattedType)} uploaded!`,
+						inputFile.name
+					);
 					setFile(fileReponse.file);
-				} catch (error: any) {
-					toast(`Error uploading ${formattedType}`, {
-						description: error ?? "",
-						icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-					});
+				} catch (e: any) {
+					error(`Error uploading ${formattedType}`, e);
 				}
 			}}
 		/>

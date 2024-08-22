@@ -1,10 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { approveComposition, approveCompositions } from "@/actions/composition";
-import { getCompositions } from "@/database/admin";
-import { ArrayElement } from "@/lib/types/utilities";
-import { dataTableSelectColumn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { dataTableSelectColumn, error, success } from "@/lib/utils";
 import { Composer, Composition } from "@prisma/client";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import {
@@ -14,12 +12,9 @@ import {
 	ArrowUpAZ,
 	ArrowUpDown,
 	Check,
-	CircleCheck,
-	CircleX,
 	X,
 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export type TableComposition = Pick<Composition, "id" | "name" | "approved"> & {
 	composers: Pick<Composer, "name">[];
@@ -36,20 +31,20 @@ async function approve(
 ) {
 	const result = await approveComposition(composition.id, approved);
 	if (!result.success)
-		return toast(
+		return error(
 			`Error ${approved ? "" : "dis"}approving composition ${composition.name}`,
-			{
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			}
+			result.error
 		);
-	toast(`${approved ? "A" : "Disa"}pproved composition ${composition.name}`, {
-		action: {
-			label: "Undo",
-			onClick: () => approveComposition(composition.id, null),
-		},
-		icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-	});
+	success(
+		`${approved ? "A" : "Disa"}pproved composition ${composition.name}`,
+		undefined,
+		{
+			action: {
+				label: "Undo",
+				onClick: () => approveComposition(composition.id, null),
+			},
+		}
+	);
 
 	if (table.options.meta) {
 		const meta = table.options.meta as {
@@ -69,23 +64,20 @@ async function approveMany(
 
 	const result = await approveCompositions(compositionIds, approved);
 	if (!result.success)
-		return toast(
+		return error(
 			`Error ${approved ? "" : "dis"}approving ${
 				compositions.length
 			} compositions`,
-			{
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			}
+			result.error
 		);
-	toast(
+	success(
 		`${approved ? "A" : "Disa"}pproved ${compositions.length} compositions`,
+		undefined,
 		{
 			action: {
 				label: "Undo",
 				onClick: () => approveCompositions(compositionIds, null),
 			},
-			icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
 		}
 	);
 

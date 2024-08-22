@@ -1,5 +1,6 @@
 "use client";
 
+import { updateList } from "@/actions/list";
 import { ListForm } from "@/components/inputs/ListForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,15 +9,14 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { updateList } from "@/actions/list";
 import { ListFormSchemaData, listFormSchema } from "@/lib/schemas";
+import { error, success } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { List } from "@prisma/client";
-import { CircleCheck, CircleX, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export function EditListButton({
 	list,
@@ -47,14 +47,8 @@ export function EditListButton({
 		setOpen(false);
 
 		if (!result.success)
-			return toast(`Error updating list ${values.name}`, {
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			});
-
-		toast(`List ${values.name} updated`, {
-			icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-		});
+			return error(`Error updating list ${values.name}`, result.error);
+		success(`List ${values.name} updated`);
 		router.refresh();
 	}
 

@@ -11,12 +11,11 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { cn, error } from "@/lib/utils";
 import { Composition, List } from "@prisma/client";
-import { CircleX, ListCheck, ListPlus } from "lucide-react";
+import { ListCheck, ListPlus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
-import { toast } from "sonner";
 import { Icons } from "../Icons";
 
 export function SaveCompositionButton({
@@ -57,14 +56,11 @@ export function SaveCompositionButton({
 		setIsLoading(false);
 
 		if (!result.success)
-			return toast(
+			return error(
 				`Error ${save ? "saving" : "removing"} ${composition.name} ${
 					save ? "to" : "from"
 				} ${list.name}`,
-				{
-					description: result.error ?? "",
-					icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-				}
+				result.error
 			);
 
 		if (save && result.listComposition)

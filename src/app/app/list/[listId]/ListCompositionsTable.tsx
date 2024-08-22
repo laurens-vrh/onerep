@@ -1,5 +1,10 @@
 "use client";
 
+import {
+	saveComposition,
+	updatePosition,
+	updateUserCompositionData,
+} from "@/actions/composition";
 import { SaveCompositionButton } from "@/components/buttons/SaveCompositionButton";
 import { DataTable } from "@/components/DataTable";
 import { DateDisplay } from "@/components/DateDisplay";
@@ -13,15 +18,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-	saveComposition,
-	updatePosition,
-	updateUserCompositionData,
-} from "@/actions/composition";
 import { ListProfile } from "@/database/List";
 import { UserProfile } from "@/database/User";
 import { ArrayElement } from "@/lib/types/utilities";
-import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
+import { dataTableSelectColumn, error, readableUrl } from "@/lib/utils";
 import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
@@ -32,15 +32,11 @@ import {
 	ArrowUpDown,
 	CalendarArrowDown,
 	CalendarArrowUp,
-	CircleCheck,
-	CircleX,
 	ListPlus,
 	MoreHorizontal,
 	X,
 } from "lucide-react";
-import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
-import { toast } from "sonner";
 
 type TableComposition = ArrayElement<ListProfile["compositions"]>;
 type TableMeta = {
@@ -394,10 +390,10 @@ async function saveFn(
 	const result = await saveComposition(compositionId, listId, save);
 
 	if (!result.success)
-		return toast(`Error ${save ? "saving" : "removing"} composition`, {
-			description: result.error ?? "",
-			icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-		});
+		return error(
+			`Error ${save ? "saving" : "removing"} composition`,
+			result.error
+		);
 
 	const meta = table.options.meta as TableMeta;
 	const position = meta.data.find(

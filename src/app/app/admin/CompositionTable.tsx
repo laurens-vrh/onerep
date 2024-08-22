@@ -1,5 +1,7 @@
 "use client";
 
+import { approveComposition, deleteComposition } from "@/actions/composition";
+import { TextLink } from "@/components/TextLink";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -7,8 +9,12 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { approveComposition, deleteComposition } from "@/actions/composition";
-import { dataTableSelectColumn, readableUrl } from "@/lib/utils";
+import {
+	dataTableSelectColumn,
+	error,
+	readableUrl,
+	success,
+} from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import {
 	ArrowDown01,
@@ -16,15 +22,10 @@ import {
 	ArrowUp01,
 	ArrowUpAZ,
 	ArrowUpDown,
-	CircleCheck,
-	CircleX,
 	MoreHorizontal,
 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 import { TableComposition } from "./UnapprovedCompositionTable";
-import { TextLink } from "@/components/TextLink";
 
 export const compositionColumns: ColumnDef<TableComposition>[] = [
 	dataTableSelectColumn<TableComposition>(),
@@ -159,16 +160,11 @@ export const compositionColumns: ColumnDef<TableComposition>[] = [
 							onClick={async () => {
 								const result = await approveComposition(composition.id, false);
 								if (!result.success)
-									return toast(
+									return error(
 										`Error disapproving composition ${composition.name}`,
-										{
-											description: result.error ?? "",
-											icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-										}
+										result.error
 									);
-								toast(`Disapproved composition ${composition.name}`, {
-									icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-								});
+								success(`Disapproved composition ${composition.name}`);
 
 								if (table.options.meta) {
 									const meta = table.options.meta as {
@@ -187,16 +183,11 @@ export const compositionColumns: ColumnDef<TableComposition>[] = [
 							onClick={async () => {
 								const result = await deleteComposition(composition.id);
 								if (!result.success)
-									return toast(
+									return error(
 										`Error deleting composition ${composition.name}`,
-										{
-											description: result.error ?? "",
-											icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-										}
+										result.error
 									);
-								toast(`Deleted composition ${composition.name}`, {
-									icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-								});
+								success(`Deleted composition ${composition.name}`);
 
 								if (table.options.meta) {
 									const meta = table.options.meta as {

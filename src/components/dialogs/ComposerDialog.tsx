@@ -1,5 +1,6 @@
 "use client";
 
+import { addComposer, updateComposer } from "@/actions/composer";
 import {
 	Dialog,
 	DialogContent,
@@ -8,17 +9,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { addComposer, updateComposer } from "@/actions/composer";
-import { readableUrl } from "@/lib/utils";
+import { ComposerFormData, composerFormSchema } from "@/lib/schemas";
+import { error, readableUrl, success } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleCheck, CircleX } from "lucide-react";
+import { Composer } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { ComposerForm } from "../inputs/ComposerForm";
-import { ComposerFormData, composerFormSchema } from "@/lib/schemas";
-import { Composer } from "@prisma/client";
 
 export function ComposerDialog({
 	trigger,
@@ -56,10 +54,7 @@ export function ComposerDialog({
 				setOpen(false);
 				router.refresh();
 			} else if (result.error)
-				return toast("Error updating composer", {
-					description: result.error,
-					icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-				});
+				return error("Error updating composer", result.error);
 		} else {
 			const result = await addComposer(values);
 			setIsLoading(false);
@@ -67,10 +62,10 @@ export function ComposerDialog({
 			if (result.success) {
 				setOpen(false);
 				form.reset();
-				toast(`Thank you for adding ${values.name}`, {
-					description: "They will be visible to everyone after verification.",
-					icon: <CircleCheck className="mr-2 w-4 h-4 my-auto" />,
-				});
+				success(
+					`Thank you for adding ${values.name}`,
+					"They will be visible to everyone after verification."
+				);
 				router.push(readableUrl("composer", result.composer));
 			} else if (result.error) form.setError(...result.error);
 		}

@@ -1,7 +1,8 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { List } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
+import { CircleCheckIcon, CircleXIcon } from "lucide-react";
+import { ExternalToast, toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -56,4 +57,28 @@ export function dataTableSelectColumn<T>(): ColumnDef<T> {
 		enableResizing: false,
 		size: 48,
 	};
+}
+
+export function error(
+	title: string,
+	description?: string,
+	data?: ExternalToast
+) {
+	toast(title, {
+		description: description ?? "",
+		icon: <CircleXIcon className="mr-2 w-4 h-4 my-auto" />,
+		...data,
+	});
+}
+
+export function success(
+	title: string,
+	description?: string,
+	data?: ExternalToast
+) {
+	toast(title, {
+		description: description ?? "",
+		icon: <CircleCheckIcon className="mr-2 w-4 h-4 my-auto" />,
+		...data,
+	});
 }

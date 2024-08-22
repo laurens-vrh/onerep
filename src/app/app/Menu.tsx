@@ -1,5 +1,7 @@
 "use client";
 
+import { createList } from "@/actions/list";
+import { deleteAccount } from "@/actions/user";
 import { ComposerDialog } from "@/components/dialogs/ComposerDialog";
 import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { Icons } from "@/components/Icons";
@@ -32,29 +34,25 @@ import {
 	MenubarSeparator,
 	MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useWindowSize } from "@/hooks/useWindowSize";
-import { createList } from "@/actions/list";
-import { deleteAccount } from "@/actions/user";
-import { signOut as authSignOut, signOut } from "next-auth/react";
 import { PrivateUser, UserProfile } from "@/database/User";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { listFormSchema, ListFormSchemaData } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import { cn, error } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-	CircleX,
 	FileMusic,
 	ListMusic,
 	MenuIcon,
 	MoonIcon,
 	SunIcon,
 } from "lucide-react";
+import { signOut as authSignOut, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { list } from "postcss";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { MainSearch } from "./MainSearch";
 import { Sidebar } from "./Sidebar";
 
@@ -103,10 +101,7 @@ export function Menu({
 		createListForm.reset();
 
 		if (!result.success)
-			return toast(`Error creating list ${values.name}`, {
-				description: result.error ?? "",
-				icon: <CircleX className="mr-2 w-4 h-4 my-auto" />,
-			});
+			return error(`Error creating list ${values.name}`, result.error);
 
 		router.push("/app/list/" + result.listId);
 		router.refresh();
