@@ -9,7 +9,7 @@ import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
 import { UserCard } from "@/components/cards/UserCard";
 import { AddComposerDialog } from "@/components/dialogs/AddComposerDialog";
-import { AddCompositionDialog } from "@/components/dialogs/AddCompositionDialog";
+import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { Heading } from "@/components/Heading";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export function SearchResults({
 			{noCompositionOrComposerResults && (
 				<p className="col-span-2">
 					{"Can't find a "}
-					<AddCompositionDialog
+					<CompositionDialog
 						trigger={
 							<button className="underline cursor-pointer">composition</button>
 						}

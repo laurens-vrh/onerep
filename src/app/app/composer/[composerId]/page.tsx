@@ -3,7 +3,7 @@ import { BackButton } from "@/components/buttons/BackButton";
 import { GeneralSaveButton } from "@/components/buttons/GeneralSaveButton";
 import { ShareButton } from "@/components/buttons/ShareButton";
 import { ListCard } from "@/components/cards/ListCard";
-import { AddCompositionDialog } from "@/components/dialogs/AddCompositionDialog";
+import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { Heading } from "@/components/Heading";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
@@ -64,14 +64,14 @@ export default async function Page({
 							id={composer.id}
 							saved={!!user.savedComposers.find((a) => a.id === composer.id)}
 						/>
-						<AddCompositionDialog
+						<CompositionDialog
 							trigger={
 								<Button className="outline-none select-none" variant="default">
 									<Plus className="mr-2 h-4 min-w-4" />
 									Composition
 								</Button>
 							}
-							initialComposers={[composer]}
+							composers={[composer]}
 						/>
 						<ShareButton path={readableUrl("composer", composer)} />
 					</>

@@ -11,12 +11,15 @@ import { SeparatorDot } from "@/components/SeparatorDot";
 import { getComposition } from "@/lib/database/Composition";
 import { prisma } from "@/lib/database/prisma";
 import { getCurrentUser, getUserProfile } from "@/lib/database/User";
-import { FileMusic } from "lucide-react";
+import { FileMusic, Pencil, Plus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { UserCompositionData } from "./UserCompositionData";
 import { readableUrl } from "@/lib/utils";
 import { TextLink } from "@/components/TextLink";
+import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
+import { Button } from "@/components/ui/button";
+import { Role } from "@prisma/client";
 
 export default async function Page({
 	params,
@@ -71,6 +74,20 @@ export default async function Page({
 					<>
 						<SaveCompositionButton composition={composition} user={user} />
 						<ShareButton path={readableUrl("composition", composition)} />
+
+						{user.role === Role.ADMIN && (
+							<CompositionDialog
+								trigger={
+									<Button className="outline-none select-none">
+										<Pencil className="mr-2 h-4 min-w-4" />
+										Edit
+									</Button>
+								}
+								composition={composition}
+								composers={composition.composers}
+								edit={true}
+							/>
+						)}
 					</>
 				}
 			/>

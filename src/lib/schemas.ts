@@ -36,10 +36,8 @@ export const signInSchema = z.object({
 			message: "Username can only contain letters, numbers, and -",
 		}),*/
 
-export type AddCompositionFormSchemaData = z.infer<
-	typeof addCompositionFormSchema
->;
-export const addCompositionFormSchema = z.object({
+export type CompositionFormData = z.infer<typeof compositionFormSchema>;
+export const compositionFormSchema = z.object({
 	name: z.string().min(1, { message: "Name required" }),
 	composers: z.array(z.number()).min(1, { message: "Composer required" }),
 });

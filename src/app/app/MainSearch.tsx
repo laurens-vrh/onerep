@@ -5,7 +5,7 @@ import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
 import { UserCard } from "@/components/cards/UserCard";
 import { AddComposerDialog } from "@/components/dialogs/AddComposerDialog";
-import { AddCompositionDialog } from "@/components/dialogs/AddCompositionDialog";
+import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ArrowRight, Search } from "lucide-react";
@@ -115,7 +115,7 @@ export function MainSearch({
 									{noCompositionOrComposerResults && (
 										<>
 											{"Can't find a "}
-											<AddCompositionDialog
+											<CompositionDialog
 												open={addCompositionDialogOpen}
 												setOpen={setAddCompositionDialogOpen}
 												trigger={

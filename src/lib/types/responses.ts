@@ -5,7 +5,7 @@ export type UserSignUpFormResponse =
 	| { success: false; error?: string };
 
 export type UserSignInFormResponse = { success: false; error: string };
-export type AddCompositionFormResponse =
+export type CompositionFormResponse =
 	| { success: true; composition: Pick<Composition, "id" | "name"> }
 	| {
 			success: false;

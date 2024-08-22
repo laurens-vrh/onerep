@@ -142,14 +142,15 @@ export function Sidebar({
 						)}
 					{user.savedLists.map((list) => listLink({ list, editable: false }))}
 					{user.savedComposers.map((composer) => {
-						const url = `/app/composer/${composer.id}`;
+						const url = readableUrl("composer", composer);
 						return (
 							<Button
+								key={composer.id}
 								variant={pathname === url ? "secondary" : "ghost"}
 								className="w-full justify-start"
 								asChild
 							>
-								<Link key={composer.id} href={url}>
+								<Link href={url}>
 									<Icons.composer className="mr-2 h-4 w-4" />
 									{composer.name}
 								</Link>

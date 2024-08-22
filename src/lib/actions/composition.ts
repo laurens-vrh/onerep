@@ -13,22 +13,23 @@ import { auth } from "../auth";
 import { getList } from "../database/List";
 import { prisma } from "../database/prisma";
 import { createUpdate } from "../database/Update";
-import { getCurrentUser, getUserProfile } from "../database/User";
+import { getUserProfile } from "../database/User";
 import { storageBucket } from "../firebase";
 import {
-	AddCompositionFormSchemaData,
-	addCompositionFormSchema,
+	addComposerFormSchema,
+	CompositionFormData,
+	compositionFormSchema,
 } from "../schemas";
 import {
-	AddCompositionFormResponse,
 	ApproveCompositionResponse,
+	CompositionFormResponse,
 	ToastResponse,
 } from "../types/responses";
 
 export async function addComposition(
-	data: AddCompositionFormSchemaData
-): Promise<AddCompositionFormResponse> {
-	if (addCompositionFormSchema.safeParse(data).success === false)
+	data: CompositionFormData
+): Promise<CompositionFormResponse> {
+	if (compositionFormSchema.safeParse(data).success === false)
 		return { success: false };
 	const session = await auth();
 	if (!session) return { success: false };
@@ -64,6 +65,38 @@ export async function addComposition(
 	}
 
 	return { success: false };
+}
+
+export async function updateComposition(
+	id: number,
+	data: Pick<Composition, "name"> & { composers: number[] }
+) {
+	if (compositionFormSchema.safeParse(data).success === false)
+		return { success: false };
+	const session = await auth();
+	if (!session || session.user.role !== Role.ADMIN) return { success: false };
+
+	try {
+		await prisma.composition.update({
+			where: { id },
+			data: {
+				...data,
+				composers: {
+					connect: data.composers.map((id) => ({ id })),
+				},
+			},
+		});
+	} catch (error) {
+		if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
+		if (error.code === "P2025")
+			return {
+				success: false,
+				error: ["composers", { message: "Composer unknown" }] as const,
+			};
+		return { success: false, error: error.code + " " + error.name };
+	}
+
+	return { success: true };
 }
 
 export async function approveComposition(
