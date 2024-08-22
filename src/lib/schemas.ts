@@ -42,8 +42,8 @@ export const compositionFormSchema = z.object({
 	composers: z.array(z.number()).min(1, { message: "Composer required" }),
 });
 
-export type AddComposerFormSchemaData = z.infer<typeof addComposerFormSchema>;
-export const addComposerFormSchema = z.object({
+export type ComposerFormData = z.infer<typeof composerFormSchema>;
+export const composerFormSchema = z.object({
 	name: z.string().min(1, { message: "Name required" }),
 });
 

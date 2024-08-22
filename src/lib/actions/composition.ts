@@ -16,7 +16,7 @@ import { createUpdate } from "../database/Update";
 import { getUserProfile } from "../database/User";
 import { storageBucket } from "../firebase";
 import {
-	addComposerFormSchema,
+	composerFormSchema,
 	CompositionFormData,
 	compositionFormSchema,
 } from "../schemas";

@@ -1,6 +1,6 @@
 "use client";
 
-import { AddComposerDialog } from "@/components/dialogs/AddComposerDialog";
+import { ComposerDialog } from "@/components/dialogs/ComposerDialog";
 import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { Icons } from "@/components/Icons";
 import { ListForm } from "@/components/inputs/ListForm";
@@ -195,7 +195,7 @@ export function Menu({
 				open={addCompositionDialogOpen}
 				setOpen={setAddCompositionDialogOpen}
 			/>
-			<AddComposerDialog
+			<ComposerDialog
 				open={addComposerDialogOpen}
 				setOpen={setAddComposerDialogOpen}
 			/>

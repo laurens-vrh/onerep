@@ -4,7 +4,7 @@ import { ComposerCard } from "@/components/cards/ComposerCard";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
 import { UserCard } from "@/components/cards/UserCard";
-import { AddComposerDialog } from "@/components/dialogs/AddComposerDialog";
+import { ComposerDialog } from "@/components/dialogs/ComposerDialog";
 import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -125,7 +125,7 @@ export function MainSearch({
 												}
 											/>{" "}
 											or{" "}
-											<AddComposerDialog
+											<ComposerDialog
 												open={addComposerDialogOpen}
 												setOpen={setAddComposerDialogOpen}
 												trigger={

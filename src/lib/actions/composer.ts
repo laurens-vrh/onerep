@@ -1,10 +1,10 @@
 "use server";
 
-import { Prisma, Role, UpdateType } from "@prisma/client";
+import { Composer, Prisma, Role, UpdateType } from "@prisma/client";
 import { auth } from "../auth";
 import { prisma } from "../database/prisma";
 import { createUpdate } from "../database/Update";
-import { addComposerFormSchema, AddComposerFormSchemaData } from "../schemas";
+import { ComposerFormData, composerFormSchema } from "../schemas";
 import {
 	AddComposerFormResponse,
 	ApproveComposerResponse,
@@ -12,9 +12,9 @@ import {
 } from "../types/responses";
 
 export async function addComposer(
-	data: AddComposerFormSchemaData
+	data: ComposerFormData
 ): Promise<AddComposerFormResponse> {
-	if (addComposerFormSchema.safeParse(data).success === false)
+	if (composerFormSchema.safeParse(data).success === false)
 		return { success: false };
 	const session = await auth();
 	if (!session) return { success: false };
@@ -34,6 +34,25 @@ export async function addComposer(
 	}
 
 	return { success: false };
+}
+
+export async function updateComposer(id: number, data: Pick<Composer, "name">) {
+	if (composerFormSchema.safeParse(data).success === false)
+		return { success: false };
+	const session = await auth();
+	if (!session || session.user.role !== Role.ADMIN) return { success: false };
+
+	try {
+		await prisma.composer.update({
+			where: { id },
+			data,
+		});
+	} catch (error) {
+		if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
+		return { success: false, error: error.code + " " + error.name };
+	}
+
+	return { success: true };
 }
 
 export async function approveComposer(

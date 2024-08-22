@@ -11,13 +11,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getComposer } from "@/lib/database/Composer";
 import { getCurrentUser, getUserProfile } from "@/lib/database/User";
-import { Plus, User } from "lucide-react";
+import { Pencil, Plus, User } from "lucide-react";
 import { ComposerCompositionTable } from "./ComposerCompositionTable";
 import { Icons } from "@/components/Icons";
 import { GridCard } from "@/components/GridCard";
 import { prisma } from "@/lib/database/prisma";
 import { Metadata } from "next";
 import { readableUrl } from "@/lib/utils";
+import { ComposerDialog } from "@/components/dialogs/ComposerDialog";
+import { Role } from "@prisma/client";
 
 export default async function Page({
 	params,
@@ -74,6 +76,19 @@ export default async function Page({
 							composers={[composer]}
 						/>
 						<ShareButton path={readableUrl("composer", composer)} />
+
+						{user.role === Role.ADMIN && (
+							<ComposerDialog
+								trigger={
+									<Button className="outline-none select-none">
+										<Pencil className="mr-2 h-4 min-w-4" />
+										Edit
+									</Button>
+								}
+								composer={composer}
+								edit={true}
+							/>
+						)}
 					</>
 				}
 			/>
