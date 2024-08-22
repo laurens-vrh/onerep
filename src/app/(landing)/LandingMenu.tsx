@@ -14,10 +14,10 @@ export function LandingMenu() {
 				</Link>
 				<div className="flex gap-2">
 					<Button asChild variant="ghost">
-						<Link href="/signin">Sign in</Link>
+						<Link href="/auth/signin">Sign in</Link>
 					</Button>
 					<Button asChild variant="default">
-						<Link href="/signin">
+						<Link href="/auth/signup">
 							Launch <ArrowRight className="w-4 h-4 ml-2" />
 						</Link>
 					</Button>
