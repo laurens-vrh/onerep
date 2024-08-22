@@ -84,11 +84,12 @@ export function Sidebar({
 		const url = "/app/user/" + username;
 		return (
 			<Button
+				key={username}
 				variant={pathname === url ? "secondary" : "ghost"}
 				className="w-full justify-start"
 				asChild
 			>
-				<Link key={username} href={url}>
+				<Link href={url}>
 					<UserIcon className="mr-2 h-4 w-4" />@{username}
 				</Link>
 			</Button>
