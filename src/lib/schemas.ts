@@ -27,15 +27,6 @@ export const signInSchema = z.object({
 	password: z.string().min(1, { message: "Password required" }),
 });
 
-/*z
-		.string()
-		.toLowerCase()
-		.min(4, { message: "Username must be between 4 and 32 characters" })
-		.max(32, { message: "Username must be between 4 and 32 characters" })
-		.regex(/^[a-z0-9-]+$/i, {
-			message: "Username can only contain letters, numbers, and -",
-		}),*/
-
 export type CompositionFormData = z.infer<typeof compositionFormSchema>;
 export const compositionFormSchema = z.object({
 	name: z.string().min(1, { message: "Name required" }),

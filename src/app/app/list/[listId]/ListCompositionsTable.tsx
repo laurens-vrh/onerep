@@ -222,19 +222,6 @@ export const listCompositionTableColumns: (
 						const data = [...meta.data];
 						data[rowIndex].composition.users[0].endDate = date ?? null;
 						meta.setData(data);
-
-						// 	meta.data.find(
-						// 	(r) => r.composition.id === row.original.composition.id
-						// )!;
-						// oldRow.composition.users = [
-						// 	{ ...row.original.composition.users[0], endDate: date ?? null },
-						// ];
-						// meta.setData([
-						// 	...meta.data.filter(
-						// 		(r) => r.composition.id !== row.original.composition.id
-						// 	),
-						// 	oldRow,
-						// ]);
 					}}
 				/>
 			) : row.original.composition.users[0].endDate ? (
