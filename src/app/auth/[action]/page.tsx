@@ -15,10 +15,10 @@ export default function AuthPage({ params }: { params: { action: string } }) {
 
 	const searchParams = useSearchParams();
 	const error = searchParams.get("code");
-	const callbackUrl = searchParams.get("redirectTo") ?? "/app";
+	const callbackUrl = searchParams.get("callbackUrl") ?? "/app";
 	const otherActionUrl = `/auth/${
 		isSignIn ? "signup" : "signin"
-	}?redirectTo=${encodeURIComponent(callbackUrl)}`;
+	}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
 	return (
 		<div className="container relative h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">

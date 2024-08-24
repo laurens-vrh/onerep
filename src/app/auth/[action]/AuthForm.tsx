@@ -167,7 +167,7 @@ export function AuthForm({
 
 				<Button disabled={isLoading}>
 					{isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-					{type === "signup" ? "Sign up" : "Sign in"} with Email
+					{type === "signup" ? "Sign up" : "Sign in"} with Password
 				</Button>
 			</form>
 		</Form>

@@ -27,7 +27,7 @@ export default async function middleware(request: NextRequest) {
 		if (request.nextUrl.pathname.startsWith("/app"))
 			return NextResponse.redirect(
 				process.env.NEXT_PUBLIC_BASE_URL +
-					"/auth/signin?redirectTo=" +
+					"/auth/signin?callbackUrl=" +
 					request.nextUrl.pathname +
 					request.nextUrl.search
 			);
@@ -46,7 +46,7 @@ export default async function middleware(request: NextRequest) {
 	if (request.nextUrl.pathname === "/auth/signin")
 		return NextResponse.redirect(
 			process.env.NEXT_PUBLIC_BASE_URL +
-				(request.nextUrl.searchParams.get("redirectTo") ?? "/app")
+				(request.nextUrl.searchParams.get("callbackUrl") ?? "/app")
 		);
 
 	return NextResponse.next();
