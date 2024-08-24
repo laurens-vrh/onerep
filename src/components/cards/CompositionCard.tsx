@@ -6,6 +6,7 @@ import { SaveCompositionButton } from "../buttons/SaveCompositionButton";
 import { SeparatorDot } from "../SeparatorDot";
 import { readableUrl } from "@/lib/utils";
 import { TextLink } from "../TextLink";
+import { Fragment } from "react";
 
 export function CompositionCard({
 	composition,
@@ -46,15 +47,16 @@ export function CompositionCard({
 						<span className="text-sm">
 							By{" "}
 							{composition.composers.map((composer, i) => (
-								<TextLink
-									key={composer.id}
-									href={readableUrl("composer", composer)}
-									hidden={true}
-									className="font-semibold relative z-10"
-								>
-									{composer.name}
-									{i + 1 !== composition.composers.length && ", "}
-								</TextLink>
+								<Fragment key={composer.id}>
+									<TextLink
+										href={readableUrl("composer", composer)}
+										hidden={true}
+										className="font-semibold relative z-10"
+									>
+										{composer.name}
+									</TextLink>
+									{composition.composers.length !== i + 1 && ", "}
+								</Fragment>
 							))}
 							{composition._count?.users ? (
 								<>

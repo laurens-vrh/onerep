@@ -4,23 +4,22 @@ import { SaveCompositionButton } from "@/components/buttons/SaveCompositionButto
 import { ShareButton } from "@/components/buttons/ShareButton";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
+import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
 import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
+import { TextLink } from "@/components/TextLink";
+import { Button } from "@/components/ui/button";
 import { getComposition } from "@/database/Composition";
 import { prisma } from "@/database/prisma";
 import { getCurrentUser, getUserProfile } from "@/database/User";
-import { FileMusic, Pencil, Plus } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
-import { UserCompositionData } from "./UserCompositionData";
 import { readableUrl } from "@/lib/utils";
-import { TextLink } from "@/components/TextLink";
-import { CompositionDialog } from "@/components/dialogs/CompositionDialog";
-import { Button } from "@/components/ui/button";
 import { Role } from "@prisma/client";
+import { FileMusic, Pencil } from "lucide-react";
+import { Metadata } from "next";
 import { Fragment } from "react";
+import { UserCompositionData } from "./UserCompositionData";
 
 export default async function Page({
 	params,
