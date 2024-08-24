@@ -1,23 +1,24 @@
 import { BackButton } from "@/components/buttons/BackButton";
-import { EditListButton } from "@/components/buttons/EditListButton";
 import { GeneralSaveButton } from "@/components/buttons/GeneralSaveButton";
 import { ShareButton } from "@/components/buttons/ShareButton";
 import { CompositionCard } from "@/components/cards/CompositionCard";
 import { ListCard } from "@/components/cards/ListCard";
+import { ListDialog } from "@/components/dialogs/ListDialog";
 import { GridCard } from "@/components/GridCard";
 import { Heading } from "@/components/Heading";
 import { Icons } from "@/components/Icons";
 import { PageHeader } from "@/components/PageHeader";
 import { SeparatorDot } from "@/components/SeparatorDot";
+import { TextLink } from "@/components/TextLink";
+import { Button } from "@/components/ui/button";
 import { getList } from "@/database/List";
 import { prisma } from "@/database/prisma";
 import { getCurrentUser, getUserProfile } from "@/database/User";
 import { readableUrl } from "@/lib/utils";
 import { format } from "date-fns";
+import { PencilIcon } from "lucide-react";
 import { Metadata } from "next";
-import Link from "next/link";
 import { ListCompositionsTable } from "./ListCompositionsTable";
-import { TextLink } from "@/components/TextLink";
 
 export default async function Page({ params }: { params: { listId: string } }) {
 	const { id } = (await getCurrentUser())!;
@@ -68,7 +69,18 @@ export default async function Page({ params }: { params: { listId: string } }) {
 							<GeneralSaveButton type="list" saved={saved} id={list.id} />
 						)}
 						<ShareButton path={readableUrl("list", list)} />
-						{list.user.id === user.id && <EditListButton list={list} />}
+						{list.user.id === user.id && (
+							<ListDialog
+								list={list}
+								edit={true}
+								user={user}
+								trigger={
+									<Button className="outline-none w-full" variant="default">
+										<PencilIcon className="mr-2 h-4 w-4" /> Edit
+									</Button>
+								}
+							/>
+						)}
 					</>
 				}
 			/>

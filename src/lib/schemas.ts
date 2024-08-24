@@ -47,7 +47,7 @@ export const composerFormSchema = z.object({
 	name: z.string().min(1, { message: "Name required" }),
 });
 
-export type ListFormSchemaData = z.infer<typeof listFormSchema>;
+export type ListFormData = z.infer<typeof listFormSchema>;
 export const listFormSchema = z.object({
 	name: z.string().min(1, { message: "Name required" }),
 	description: z.string(),

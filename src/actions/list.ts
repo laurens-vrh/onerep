@@ -50,3 +50,29 @@ export async function updateList(
 
 	return { success: true };
 }
+
+export async function deleteList(
+	id: number
+): Promise<{ success: true } | { success: false; error?: string }> {
+	const session = await auth();
+	if (!session) return { success: false };
+
+	await prisma
+		.$transaction([
+			prisma.list.delete({ where: { userId: session.user.id, id } }),
+			prisma.userCompositionData.deleteMany({
+				where: {
+					userId: session.user.id,
+					composition: {
+						lists: { none: { list: { userId: session.user.id } } },
+					},
+				},
+			}),
+		])
+		.catch((error) => {
+			if (!(error instanceof Prisma.PrismaClientKnownRequestError)) throw error;
+			return { success: false, error: error.code + " " + error.name };
+		});
+
+	return { success: true };
+}

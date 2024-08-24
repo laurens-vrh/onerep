@@ -443,7 +443,7 @@ export function ListCompositionsTable({
 		<>
 			{list.compositions.length === 0 && showActions && (
 				<p className="text-muted-foreground">
-					Add compositions to this list by using the search bar
+					Add compositions to this list by using the search bar.
 				</p>
 			)}
 			<DataTable

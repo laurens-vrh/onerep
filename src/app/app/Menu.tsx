@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/menubar";
 import { PrivateUser, UserProfile } from "@/database/User";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { listFormSchema, ListFormSchemaData } from "@/lib/schemas";
+import { listFormSchema, ListFormData } from "@/lib/schemas";
 import { cn, error } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -78,7 +78,7 @@ export function Menu({
 	const [addComposerDialogOpen, setAddComposerDialogOpen] = useState(false);
 	const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
 
-	const createListForm = useForm<ListFormSchemaData>({
+	const createListForm = useForm<ListFormData>({
 		resolver: zodResolver(listFormSchema),
 		defaultValues: {
 			name: "New list",
@@ -93,7 +93,7 @@ export function Menu({
 	const pathname = usePathname();
 	useEffect(() => setSidebarOpen(false), [pathname]);
 
-	async function onCreateListFormSubmit(values: ListFormSchemaData) {
+	async function onCreateListFormSubmit(values: ListFormData) {
 		setCreateListFormLoading(true);
 		const result = await createList(values);
 		setCreateListFormLoading(false);

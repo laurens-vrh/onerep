@@ -1,11 +1,12 @@
 "use client";
 
-import { EditListButton } from "@/components/buttons/EditListButton";
+import { ListDialog } from "@/components/dialogs/ListDialog";
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { UserProfile } from "@/database/User";
+import { readableUrl } from "@/lib/utils";
 import { List, Role } from "@prisma/client";
 import {
 	CircleUser,
@@ -17,7 +18,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MainSearch } from "./MainSearch";
-import { readableUrl } from "@/lib/utils";
 
 export function Sidebar({
 	user,
@@ -47,7 +47,7 @@ export function Sidebar({
 		  }
 		| {
 				editable: true;
-				list: Pick<List, "id" | "name" | "icon" | "description">;
+				list: Pick<List, "id" | "name" | "icon" | "description" | "custom">;
 		  }) {
 		const Icon = Icons.listIcons[list.icon];
 		const url = readableUrl("list", list);
@@ -69,10 +69,12 @@ export function Sidebar({
 					</Link>
 				</Button>
 				{editable && (
-					<EditListButton
+					<ListDialog
 						list={list}
-						button={
-							<Pencil className="w-12 h-10 px-4 py-3 hidden group-hover:block text-muted-foreground" />
+						edit={true}
+						user={user}
+						trigger={
+							<Pencil className="w-12 h-10 px-4 py-3 text-muted-foreground hidden group-hover:block" />
 						}
 					/>
 				)}
