@@ -1,9 +1,11 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { Composer } from "@prisma/client";
-import { Search, User, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Icons } from "../Icons";
+import { ComposerDialog } from "../dialogs/ComposerDialog";
 
 export function SearchableComposerListInput({
 	onChange,
@@ -75,16 +77,38 @@ export function SearchableComposerListInput({
 					/>
 				</div>
 
-				{results.length === 0 && search !== "" && (
-					<div className="grid place-content-center my-6 text-sm text-muted-foreground">
-						No composers found.
+				{search !== "" && (
+					<div
+						className={cn(
+							"text-center text-sm text-muted-foreground border-t",
+							results.length > 0 ? "py-2" : "py-4"
+						)}
+					>
+						{results.length === 0 && <p>No results found.</p>}
+						<p>
+							{"Can't find a "}
+							<ComposerDialog
+								trigger={
+									<button className="underline underline-offset-4 hover:text-primary cursor-pointer">
+										composer
+									</button>
+								}
+								redirect={false}
+							/>
+							?
+						</p>
 					</div>
 				)}
 
-				<ul className={`border-t-2 ${search === "" ? "hidden" : ""}`}>
-					{results.map((result) => (
+				<ul
+					className={cn(
+						results.length > 0 && "border-t",
+						search === "" && "hidden"
+					)}
+				>
+					{results.map((result, i) => (
 						<li
-							className="flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 m-1 text-sm outline-none hover:bg-accent"
+							className="flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 m-1 text-sm outline-none hover:bg-accent focus:bg-accent"
 							key={result.id}
 							onClick={() => {
 								if (selection.find((a) => a.id === result.id)) return;
@@ -92,6 +116,7 @@ export function SearchableComposerListInput({
 								setSelection(newSelection);
 								onChange(newSelection);
 							}}
+							tabIndex={i}
 						>
 							<Icons.composer className="mr-2 h-4 w-4" />
 							<span>{result.name}</span>

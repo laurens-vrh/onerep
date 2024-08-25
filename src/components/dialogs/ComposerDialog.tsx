@@ -24,12 +24,14 @@ export function ComposerDialog({
 	setOpen: setOpenProp,
 	edit,
 	composer,
+	redirect,
 }: {
 	trigger?: React.ReactNode;
 	open?: boolean;
 	setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 	composer?: Pick<Composer, "id" | "name">;
 	edit?: boolean;
+	redirect?: boolean;
 }) {
 	const [stateOpen, setStateOpen] = useState(false);
 	const [open, setOpen] =
@@ -66,7 +68,7 @@ export function ComposerDialog({
 					`Thank you for adding ${values.name}`,
 					"They will be visible to everyone after verification."
 				);
-				router.push(readableUrl("composer", result.composer));
+				if (redirect) router.push(readableUrl("composer", result.composer));
 			} else if (result.error) form.setError(...result.error);
 		}
 	}
