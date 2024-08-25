@@ -39,13 +39,17 @@ export function SearchResults({
 					{"Can't find a "}
 					<CompositionDialog
 						trigger={
-							<button className="underline cursor-pointer">composition</button>
+							<button className="underline underline-offset-4 hover:text-primary cursor-pointer">
+								composition
+							</button>
 						}
-					/>{" "}
-					or{" "}
+					/>
+					{" or "}
 					<ComposerDialog
 						trigger={
-							<button className="underline cursor-pointer">composer</button>
+							<button className="underline underline-offset-4 hover:text-primary cursor-pointer">
+								composer
+							</button>
 						}
 					/>
 					?
